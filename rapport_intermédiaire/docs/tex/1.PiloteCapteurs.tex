@@ -1,0 +1,94 @@
+% Rapport intermédiaire
+
+% TOADD:
+% quand un périphérique est ouvert, la numérotation de ses messages
+% est remise à 0.
+% quand le driver est installé, le temps est remis à 0.
+% numérotation locale au capteur, horloge globale.
+% dans DEvadd: le nom et l'adresse doivent être uniques
+\textsl{
+Note:\\
+On adopte le préfixe PIC (pour PIlote de Capteur).
+}
+
+\section{Spécification des fonctions d'interface}
+
+\subsection{Fonctions publiques}
+
+\begin{m_desc}
+
+ \item [PIC\_DrvInstall] \hfill\\
+ met en place les éléments communs à tous les périphériques :
+Handler d'Interruption associé à l'arrivée de nouveaux messages, HandlerCarte
+Buffer contenant le dernier message arrivé, BufferCarte.
+ \item [PIC\_DrvRemove] \hfill\\
+libère les éléments mis en place par la fonction DrvInstall.
+
+ \item [PIC\_DevAdd] \hfill\\
+ prend comme paramètres le nom du capteur et son identifiant associé (le choix de ces deux paramètres est laissé à l'utilisateur). Elle vérifie que aucun autre capteur n'utilise le même identifiant et/ou le même nom et ajoute le capteur si ces conditions sont vérifiées.
+Le périphérique n'est ajouté que si le nombre de capteur utilisé après ajout est inférieur ou égal à 15. La fonction met également à jour le nombre de périphériques ajoutés.
+\vskip 4mm
+
+ \item [PIC\_DevDelete] \hfill\\
+supprime le périphérique demandé si il existe et décrémente le nombre de périphériques utilisés.
+
+\end{m_desc}
+
+\subsection{Fonctions privées}
+
+\begin{m_desc}
+ \item [PIC\_Open] \hfill\\
+La fonction d'ouverture s'assure que le périphérique n'a été ouvert qu'une seule fois. 
+
+ \item [PIC\_Close] \hfill\\
+La fonction de fermerture rend de nouveau possible l'ouverture du périphérique.
+
+ \item [PIC\_Read] \hfill\\
+La fonction de lecture place le message le plus ancien trouvé dans la boîte aux lettres du capteur dans le buffer spécifié par l'utilisateur. 
+La fonction retourne 1 si un message a été trouvé et placé dans le buffer, et 0 si la boîte aux lettre était vide lors de l'appel de la fonction.
+
+ \item [PIC\_IoCtl] \hfill\\
+Cette fonction permet de changer dynamiquement le fichier associé au capteur sans passer par les étapes close/open.
+
+\end{m_desc}
+
+\section{Structures de données manipulées}
+
+Trois structures de données vont être manipulées : une structure définissant l'organisation du buffer associé à la carte sur laquelle les capteurs sont branchés et recevant les messages entrants, et une structure de données utilisée pour les messages déposés dans les boîtes aux lettre associées aux différents capteurs. On décrit également la structure de donnée associée à chaque périphérique, PIC\_DATA\_STRURE.
+
+\begin{m_desc}
+ \item [PIC\_BUFFER\_CARTE] \hfill\\
+adresseCapteur : int\\
+message   : MESSAGE\\
+
+Cette structure de donnée est protégée par un mutex. Ainsi on peut s'assurer qu'un nouveau message ne sera pas écrit en même temps que le message courant est lu.
+
+ \item [PIC\_MESSAGE\_CAPTEUR] \hfill\\
+numMessage : int\\
+timestamp  : TIMESTAMP\\
+message    : MESSAGE\\
+
+Les messages de type PIC\_MESSAGE\_CAPTEUR étant directement stocké dans la structure associée à un capteur précis, l'identifiant du capteur n'est plus stocké.
+
+\item [PIC\_DATA\_STRUCTURE] \hfill\\
+adresseCapteur  : int\\
+messageBox : BAL\_VXWORKS\\
+
+\item [PIC\_HEADER] \hfill\\
+header     : DEV\_HEADER\\
+specific   : PIC\_DATA\_STRURE\\
+
+\end{m_desc}
+
+\section{Plan de test}
+
+On se propose de pratiquer les tests suivants sur notre pilote de périphérique dans les situations suivantes :
+
+\begin{enumerate}
+ \item utilisation normale
+ \item ajout de plus de quinze capteurs
+ \item ouverture du même périphérique plus d'une fois
+ \item utilisation de ioctl pour changer le fichier associé au périphérique
+ \item ajout/suppression du périphérique, installation/désinstallation du pilote.
+ \item test de charge du pilote (envoi de nombreux messages dans un intervalle bref)
+\end{enumerate}
