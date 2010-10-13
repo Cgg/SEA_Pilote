@@ -10,10 +10,24 @@
 
 /* DECLARATIONS DE TYPES DE DONNEES */
 
+/* type du message delivre par un capteur. */
+typedef int MESSAGE;
+
+/* Structure de donnees des messages stockes par chaque device en attendant un 
+ * iosRead.
+ */
+typedef struct
+{
+	int         numMessage;
+	TIMESTAMP   tArrivee;
+	MESSAGE     message;
+
+} PIC_MESSAGE_CAPTEUR;
+
 /* Structure de donnees specifique au PIC */
 typedef struct
 {
-	/* TODO : rajouter des trucs utiles ici*/
+	/* TODO : rajouter des trucs utiles ici */
 	int numero_driver;
 	
 } PIC_SPECIFIC;
@@ -81,8 +95,14 @@ int PIC_DrvInstall
 	
 	if ( numDriver == -1 )
 	{
-		numDriver = iosDrvInstall( &WDR_Create, &WDR_Remove, 0, 0, &WDR_Read, 0, &WDR_IoCtl );
-		
+		numDriver = iosDrvInstall( &PIC_Open,
+								   &PIC_Close,
+								   0,
+								   0,
+								   &PIC_Read,
+								   0,
+								   &PIC_IoCtl );
+
 		retour = numDriver;
 	}
 	
@@ -112,18 +132,19 @@ int PIC_DrvRemove
 /******************************************************************************/
 int PIC_DevAdd
 (
-	char * const name
+	char * const name,
+	int    const adresseCapteur
 )
 {
 	int retour = -1;
 	
-	WDR_HEADER * desc = ( WDR_HEADER * ) malloc( sizeof( WDR_HEADER ) );
-	
-	if ( numDriver != -1)
+	if ( numDriver != -1 )
 	{
+		WDR_HEADER * desc = ( WDR_HEADER * ) malloc( sizeof( WDR_HEADER ) );
+		
 		( desc->specific ).numero_driver = nombreDevices++ ;
 		
-		iosDevAdd ( (DEV_HDR * )desc, name, numDriver);
+		iosDevAdd ( ( DEV_HDR * )desc, name, numDriver);
 		
 		retour = nombreDevices ;
 	}
