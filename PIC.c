@@ -23,8 +23,8 @@ typedef struct
 {
 	DEV_HDR        dev_hdr;
 	PIC_SPECIFIC   specific;
-	
-} WDR_HEADER;
+
+} PIC_HEADER;
 
 
 /* DONNEES STATIQUES */
