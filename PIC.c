@@ -1,8 +1,13 @@
 /* Implementation du Pilote de Capteur
  */
 
+/* TODO :
+ * Definir joliment le type booleen (avec des macros et tout et tout)
+ */
+
 /* system includes */
 #include "stdlib.h"
+#include "timers.h"
 
 /* project includes */
 #include "PIC.h"
@@ -12,6 +17,8 @@
 
 /* type du message delivre par un capteur. */
 typedef int MESSAGE;
+
+typedef timespec TIMESTAMP;
 
 /* Structure de donnees des messages stockes par chaque device en attendant un 
  * iosRead.
@@ -110,6 +117,8 @@ int PIC_DrvInstall
 								   &PIC_IoCtl );
 
 		retour = numDriver;
+		
+		/* TODO : Initialiser le temps */
 	}
 	
 	return retour;
@@ -146,10 +155,12 @@ int PIC_DevAdd
 	
 	if ( numDriver != -1 )
 	{
+		/* TODO : checker si un device qvec meme nom ou meme adresse n'existe
+		 * pas deja. */
 		WDR_HEADER * desc = ( WDR_HEADER * ) malloc( sizeof( WDR_HEADER ) );
 		
 		( desc->specific ).numero_driver = nombreDevices++ ;
-		
+
 		iosDevAdd ( ( DEV_HDR * )desc, name, numDriver);
 		
 		retour = nombreDevices ;
@@ -168,12 +179,12 @@ int PIC_DevDelete
 	
 	DEV_HDR * pDevHdr;
 	
-	char* suite [1];
+	char suite[1];
 
 	/* recherche du peripherique a supprimer */
-	pDevHdr = iosDevFind( name, suite ); 
+	pDevHdr = iosDevFind( name, &suite ); 
 	
-	if ( ( pDevHdr!= NULL )  && ( *suite[0] == '\0' ) )
+	if ( ( pDevHdr!= NULL )  && ( suite[0] == '\0' ) )
 	{
 		iosDevDelete( pDevHdr );
 		free( pDevHdr );
@@ -213,11 +224,7 @@ int PIC_Read
 	size_t   maxbytes /* max no. of bytes to read into buffer */
 )
 {
-	buffer[ 0 ] = 65;
-	buffer[ 1 ] = 77;
-	buffer[ 2 ] = '\0';
-
-	return 3;
+	return 0;
 }
 
 /******************************************************************************/
