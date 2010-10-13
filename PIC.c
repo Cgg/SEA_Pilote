@@ -24,19 +24,25 @@ typedef struct
 
 } PIC_MESSAGE_CAPTEUR;
 
-/* Structure de donnees specifique au PIC */
+/* Structure de donnees specifique au PIC. Contient :
+ * - idBAL : identifiant de la boite aux lettre ou sont stockes les messages 
+ * envoyes par le capteur et non lu. Capacite max : 10 messages. 
+ * - adresseCapteur : adresse du capteur fournie par l'utilisateur.
+ * - numDriver : index du driver utilise par le device dans la table des drivers
+ */
 typedef struct
 {
-	/* TODO : rajouter des trucs utiles ici */
-	int numero_driver;
+	int   idBAL;
+	int   adresseCapteur;
+	int   numero_driver;
 	
-} PIC_SPECIFIC;
+} PIC_DATA_STRUCTURE;
 
 /* Structure de donnees standard pour un pilote VxWorks */
 typedef struct
 {
-	DEV_HDR        dev_hdr;
-	PIC_SPECIFIC   specific;
+	DEV_HDR              dev_hdr;
+	PIC_DATA_STRUCTURE   specific;
 
 } PIC_HEADER;
 
