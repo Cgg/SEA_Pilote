@@ -3,6 +3,8 @@
 
 /* TODO :
  * Definir joliment le type booleen (avec des macros et tout et tout)
+ * eventuellement
+ * un jour peut-être
  */
 
 /* system includes */
@@ -124,6 +126,11 @@ void PIC_DrvInit
 	void
 );
 
+/******************************************************************************/
+void PIC_DrvConclude
+(
+	void
+);
 
 /* === IMPLEMENTATION === */
 
@@ -290,4 +297,13 @@ void PIC_DrvInit
 	tamponItScrutation = malloc( sizeof( PIC_BUF_TEMP ) );
 	
 	/* TODO : Initialiser le temps */
+}
+
+/******************************************************************************/
+void PIC_DrvConclude
+(
+	void
+)
+{
+	free( tamponItScrutation );
 }
