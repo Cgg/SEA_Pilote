@@ -11,16 +11,33 @@
 /* system includes */
 #include "iosLib.h"
 
+/* Définition de codes retours */
+typedef enum 
+{
+	deja_installe,
+	no_room
+	
+} PIC_CR_INSTALL;
+
+typedef enum
+{
+	remove_ok,
+	pas_installe,
+	fichiers_ouverts
+	
+} PIC_CR_REMOVE;
+
+
 /* primitives de configuration du pilote */
 
 /******************************************************************************/
-int PIC_DrvInstall
+PIC_CR_INSTALL PIC_DrvInstall
 (
 	void
 );
 
 /******************************************************************************/
-int PIC_DrvRemove
+PIC_CR_REMOVE PIC_DrvRemove
 (
 	void
 );

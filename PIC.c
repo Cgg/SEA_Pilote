@@ -13,21 +13,42 @@
 #include "PIC.h"
 
 
-/* DECLARATIONS DE TYPES DE DONNEES */
+/* === DECLARATIONS DE TYPES DE DONNEES === */
+
+/* temps */
+typedef struct
+{
+    time_t      tv_sec;         /* seconds */
+    long        tv_nsec;        /* nanoseconds (0 -1,000,000,000) */
+
+} timespec;
 
 /* type du message delivre par un capteur. */
 typedef int MESSAGE;
 
-typedef timespec TIMESTAMP;
+/* Structure de donnees du tampon situe entre le handler d'it et la tache de
+ * scrutation. 
+ */
+typedef struct
+{
+	/* Gestion des engorgements de messages */
+	int   bufferPlein;
+	int   nMessagesPerdus;
+	
+	/* Message en lui-meme */
+	int       adCapteur;
+	MESSAGE   message;
+	
+} PIC_BUF_TEMP;
 
 /* Structure de donnees des messages stockes par chaque device en attendant un 
  * iosRead.
  */
 typedef struct
 {
-	int         numMessage;
-	TIMESTAMP   tArrivee;
-	MESSAGE     message;
+	int        numMessage;
+	timespec   tArrivee;
+	MESSAGE    message;
 
 } PIC_MESSAGE_CAPTEUR;
 
@@ -54,17 +75,17 @@ typedef struct
 } PIC_HEADER;
 
 
-/* DONNEES STATIQUES */
+/* === DONNEES STATIQUES === */
 
 static int numDriver     = -1;
 static int nombreDevices = 0;
 
+static PIC_BUF_TEMP * tamponItScrutation = NULL;
 
-/* PROTOTYPES DES FONCTIONS LOCALES */
 
-/* prototypes des primitives d'utilisation du PIC 
- * 
- */
+/* === PROTOTYPES DES FONCTIONS LOCALES === */
+
+/* prototypes des primitives d'utilisation du PIC */
 
 /******************************************************************************/
 int PIC_Open
@@ -95,16 +116,24 @@ int PIC_IoCtl
 	int const arguments
 );
 
-
-/* IMPLEMENTATION */
+/* prototype des autres fonctions locales */
 
 /******************************************************************************/
-int PIC_DrvInstall
+void PIC_DrvInit
+(
+	void
+);
+
+
+/* === IMPLEMENTATION === */
+
+/******************************************************************************/
+PIC_CR_INSTALL PIC_DrvInstall
 (
 	void
 )
 {
-	int retour = -1;
+	int retour = deja_installe;
 	
 	if ( numDriver == -1 )
 	{
@@ -116,29 +145,41 @@ int PIC_DrvInstall
 								   0,
 								   &PIC_IoCtl );
 
-		retour = numDriver;
-		
-		/* TODO : Initialiser le temps */
+		if ( numDriver == ERROR )
+		{
+			retour = no_room;
+		}
+		else
+		{
+			retour = numDriver;
+			
+			PIC_DrvInit();
+		}
 	}
 	
 	return retour;
 }
 
 /******************************************************************************/
-int PIC_DrvRemove
+PIC_CR_REMOVE PIC_DrvRemove
 (
 	void
 )
 {
-	int retour = -1;
+	int retour = pas_installe;
 	
 	if ( numDriver != -1 )
 	{
-		iosDrvRemove( numDriver, TRUE );
-		
-		numDriver = -1;
-		
-		retour = 0;
+		if ( iosDrvRemove( numDriver, TRUE ) == OK )
+		{		
+			numDriver = -1;
+			
+			retour = remove_ok;
+		}
+		else
+		{
+			retour = fichiers_ouverts;
+		}
 	}
 	
 	return retour;
@@ -155,9 +196,9 @@ int PIC_DevAdd
 	
 	if ( numDriver != -1 )
 	{
-		/* TODO : checker si un device qvec meme nom ou meme adresse n'existe
+		/* TODO : checker si un device avec meme nom ou meme adresse n'existe
 		 * pas deja. */
-		WDR_HEADER * desc = ( WDR_HEADER * ) malloc( sizeof( WDR_HEADER ) );
+		PIC_HEADER * desc = ( PIC_HEADER * ) malloc( sizeof( PIC_HEADER ) );
 		
 		( desc->specific ).numero_driver = nombreDevices++ ;
 
@@ -179,10 +220,10 @@ int PIC_DevDelete
 	
 	DEV_HDR * pDevHdr;
 	
-	char suite[1];
+	char * suite = malloc( sizeof( char ) );
 
 	/* recherche du peripherique a supprimer */
-	pDevHdr = iosDevFind( name, &suite ); 
+	pDevHdr = iosDevFind( name, &suite );
 	
 	if ( ( pDevHdr!= NULL )  && ( suite[0] == '\0' ) )
 	{
@@ -191,6 +232,8 @@ int PIC_DevDelete
 		
 		retour = 0;
 	}
+	
+	free ( suite );
 	
 	return retour;
 }
@@ -236,4 +279,15 @@ int PIC_IoCtl
 )
 {
 	return 0;
+}
+
+/******************************************************************************/
+void PIC_DrvInit
+(
+	void
+)
+{
+	tamponItScrutation = malloc( sizeof( PIC_BUF_TEMP ) );
+	
+	/* TODO : Initialiser le temps */
 }
