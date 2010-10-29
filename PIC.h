@@ -27,6 +27,15 @@ typedef enum
 	
 } PIC_CR_REMOVE;
 
+typedef enum
+{
+	driver_pas_installe = -1,
+	adresse_prise       = -2,
+	nom_pris            = -3,
+	n_capteurs_overflow = -4
+	
+} PIC_CR_ADD;
+
 
 /* primitives de configuration du pilote */
 
@@ -43,7 +52,7 @@ PIC_CR_REMOVE PIC_DrvRemove
 );
 
 /******************************************************************************/
-int PIC_DevAdd
+PIC_CR_ADD PIC_DevAdd
 (
 	char * const name,
 	int    const adresseCapteur

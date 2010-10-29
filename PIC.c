@@ -14,6 +14,10 @@
 /* project includes */
 #include "PIC.h"
 
+/* === DEFINITIONS CONSTANTES === */
+
+#define N_CAPTEURS_MAX                 ( 255 )
+
 
 /* === DECLARATIONS DE TYPES DE DONNEES === */
 
@@ -193,25 +197,31 @@ PIC_CR_REMOVE PIC_DrvRemove
 }
 
 /******************************************************************************/
-int PIC_DevAdd
+PIC_CR_ADD PIC_DevAdd
 (
 	char * const name,
 	int    const adresseCapteur
 )
 {
-	int retour = -1;
+	int retour = driver_pas_installe;
 	
 	if ( numDriver != -1 )
 	{
 		/* TODO : checker si un device avec meme nom ou meme adresse n'existe
 		 * pas deja. */
-		PIC_HEADER * desc = ( PIC_HEADER * ) malloc( sizeof( PIC_HEADER ) );
 		
-		( desc->specific ).numero_driver = nombreDevices++ ;
-
-		iosDevAdd ( ( DEV_HDR * )desc, name, numDriver);
+		retour = n_capteurs_;
 		
-		retour = nombreDevices ;
+		if( nombreDevices < N_CAPTEURS_MAX )
+		{
+			PIC_HEADER * desc = ( PIC_HEADER * ) malloc( sizeof( PIC_HEADER ) );
+			
+			( desc->specific ).numero_driver = nombreDevices++ ;
+	
+			iosDevAdd ( ( DEV_HDR * )desc, name, numDriver);
+			
+			retour = nombreDevices ;
+		}		
 	}
 
 	return retour;
