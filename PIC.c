@@ -210,7 +210,7 @@ PIC_CR_ADD PIC_DevAdd
 		/* TODO : checker si un device avec meme nom ou meme adresse n'existe
 		 * pas deja. */
 		
-		retour = n_capteurs_;
+		retour = n_capteurs_overflow;
 		
 		if( nombreDevices < N_CAPTEURS_MAX )
 		{
