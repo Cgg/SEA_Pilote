@@ -12,6 +12,8 @@
 
 /* === DEFINITIONS DE CONSTANTES === */
 
+#define PRIORITE                       ( 1 )
+
 
 /* === DECLARATIONS DE TYPES DE DONNEES === */
 
@@ -27,7 +29,10 @@
 /******************************************************************************/
 int PIC_TacheScrutation
 (
-	void
+	MSG_Q_ID const idBalDrv
+	/* a passer egalement : pointeur vers la liste/le tableau des capteurs 
+	 * installes 
+	 */
 )
 {
 }

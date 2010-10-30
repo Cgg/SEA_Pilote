@@ -55,7 +55,8 @@ typedef struct
 static int numDriver     = -1;
 static int nombreDevices = 0;
 
-static MSG_Q_ID idBalDrv;
+static MSG_Q_ID   idBalDrv          = 0;
+static int        idTacheScrutation = 0;
 
 /* Adresse du buffer de la carte reseau */
 static char * msg_buff = NULL;
