@@ -35,23 +35,6 @@ typedef struct
 /* type du message delivre par un capteur. */
 typedef int MESSAGE;
 
-
-/* Structure de donnees du tampon situe entre le handler d'it et la tache de
- * scrutation. 
- */
-typedef struct
-{
-	/* Gestion des engorgements de messages */
-	int   bufferPlein;  /* 0/1, remplacer par un semaphore mutex ? */
-	int   nMessagesPerdus;
-	
-	/* Message en lui-meme */
-	int       adCapteur;
-	MESSAGE   message;
-	
-} PIC_BUF_TEMP;
-
-
 /* Structure de donnees des messages stockes par chaque device en attendant un 
  * iosRead.
  */
@@ -93,8 +76,9 @@ typedef struct
 static int numDriver     = -1;
 static int nombreDevices = 0;
 
-static PIC_BUF_TEMP * tamponItScrutation = NULL;
+static MSG_Q_ID bal_drv;
 
+static char* msg_buff = NULL;
 
 /* === PROTOTYPES DES FONCTIONS LOCALES === */
 
@@ -116,9 +100,9 @@ int PIC_Close
 /******************************************************************************/
 int PIC_Read
 (
-	int      fd,      /* file descriptor from which to read */
-	char   * buffer,  /* pointer to buffer to receive bytes */
-	size_t   maxbytes /* max no. of bytes to read into buffer */
+	int      fd,      /* descripteur de fichier que l'on veut lire */
+	char   * buffer,  /* pointeur vers le buffer de stockage des données lues */
+	size_t   maxbytes /* taille max. à lire */
 );
 
 /******************************************************************************/
@@ -135,7 +119,7 @@ int PIC_IoCtl
 int PIC_HandlerIT
 (
 	void
-);
+)
 
 /* prototype des autres fonctions locales */
 
@@ -341,7 +325,13 @@ int PIC_HandlerIT
 	void
 )
 {
-	/* TODO : ecrire le handler d'it. */
+	sysIntDisable(42);
+	/*work in progress*/
+	msgQSend;
+	sysIntEnable(42);
+	
+)
+	
 }
 
 /******************************************************************************/
@@ -350,10 +340,9 @@ void PIC_DrvInit
 	void
 )
 {
-	tamponItScrutation = malloc( sizeof( PIC_BUF_TEMP ) );
 	
-	tamponItScrutation->bufferPlein     = 0;
-	tamponItScrutation->nMessagesPerdus = 0;
+	bal_drv = msgQCreate( PIC_N_MESSAGES_MAX, sizeof( PIC_MSG ), MSG_Q_FIFO );
+	
 	
 	/* TODO : 
 	 * - Lancer la tâche de scrutation
