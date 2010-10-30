@@ -4,6 +4,7 @@
 /* === INCLUDES === */
 
 /* system includes */
+#include "stdlib.h"
 
 /* project includes */
 #include "PIC_TacheScrutation.h"
@@ -51,12 +52,17 @@ int PIC_TacheScrutation
 	 * - goto le debut :D
 	 */
 	
-	char * bufferReception;
+	char              * bufferReception;
+	PIC_MESSAGE_BRUTE * messageRecu;
+	
+	 bufferReception = ( char * )malloc( PIC_TAILLE_MSG_BRUTE );
 	
 	for( ;; )
 	{
-		msgQReceive( idBalDrv, bufferReception, 0, WAIT_FOREVER );
-		
-		PIC_DATA_STRUCTURE * capteurDestinataire = PIC_RechercheCapteur(  );
+		msgQReceive( idBalDrv, bufferReception, PIC_TAILLE_MSG_BRUTE, WAIT_FOREVER );
+
+		messageRecu = ( PIC_MESSAGE_BRUTE * )bufferReception;
 	}
+	
+	free( bufferReception );
 }
