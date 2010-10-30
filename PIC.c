@@ -21,7 +21,6 @@
 
 #define PIC_N_CAPTEURS_MAX             ( 255 )
 #define PIC_N_MESSAGES_MAX             ( 10 )
-#define PIC_RAW_MSG_SIZE			   2 * sizeof( int )
 #define NIVEAU_IT					   ( 42 )
 
 
@@ -287,9 +286,9 @@ int PIC_HandlerIT
 	char * msg;
 
 	sysIntDisable( NIVEAU_IT );
-	msg = malloc( PIC_RAW_MSG_SIZE );
-	memcpy( msg, msg_buff, PIC_RAW_MSG_SIZE );
-	msgQSend( idBalDrv, msg, PIC_RAW_MSG_SIZE );
+	msg = malloc( PIC_TAILLE_MESSAGE_BRUT );
+	memcpy( msg, msg_buff, PIC_TAILLE_MESSAGE_BRUT );
+	msgQSend( idBalDrv, msg, PIC_TAILLE_MESSAGE_BRUT );
 	sysIntEnable( NIVEAU_IT );	
 }
 
@@ -299,7 +298,7 @@ void PIC_DrvInit
 	void
 )
 {
-	idBalDrv = msgQCreate( PIC_N_MESSAGES_MAX, PIC_RAW_MSG_SIZE, MSG_Q_FIFO );
+	idBalDrv = msgQCreate( PIC_N_MESSAGES_MAX, PIC_TAILLE_MESSAGE_BRUT, MSG_Q_FIFO );
 	
 	/* TODO : 
 	 * - Lancer la tâche de scrutation
