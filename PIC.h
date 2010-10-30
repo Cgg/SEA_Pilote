@@ -8,14 +8,18 @@
 #ifndef PIC_H
 #define PIC_H
 
-/* === INCLUDES === */
+/* === INCLUSIONS === */
 
-/* system includes */
+/* inclusions systeme */
 #include "iosLib.h"
 #include "msgQLib.h"
 
  /* === DECLARATION DE CONSTANTES */
 
+/* === CONSTANTES === */
+
+/* Taille d'un message tire du buffer de la carte reseau */
+static const int PIC_TAILLE_MSG_BRUT = 2 * sizeof( char );
 
 /* === DECLARATIONS DE TYPES DE DONNEES === */
 

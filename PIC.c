@@ -7,20 +7,20 @@
  * un jour peut-être
  */
 
-/* === INCLUDES === */
+/* === INCLUSIONS === */
 
-/* system includes */
+/* inclusions systeme */
 #include "stdlib.h"
 #include "timers.h"
 
-/* project includes */
+/* inclusions projet */
 #include "PIC.h"
 
 /* === DEFINITIONS DE CONSTANTES === */
 
 #define PIC_N_CAPTEURS_MAX             ( 255 )
 #define PIC_N_MESSAGES_MAX             ( 10 )
-#define PIC_RAW_MSG_SIZE			   ( 4 )
+#define NIVEAU_IT					   ( 42 )
 
 
 /* === DECLARATIONS DE TYPES DE DONNEES === */
@@ -285,9 +285,9 @@ int PIC_HandlerIT
 	char * msg;
 
 	sysIntDisable( NIVEAU_IT );
-	msg = malloc( PIC_RAW_MSG_SIZE );
-	memcpy( msg, msg_buff, PIC_RAW_MSG_SIZE );
-	msgQSend( idBalDrv, msg, PIC_RAW_MSG_SIZE );
+	msg = malloc( PIC_TAILLE_MESSAGE_BRUT );
+	memcpy( msg, msg_buff, PIC_TAILLE_MESSAGE_BRUT );
+	msgQSend( idBalDrv, msg, PIC_TAILLE_MESSAGE_BRUT );
 	sysIntEnable( NIVEAU_IT );	
 }
 
@@ -297,7 +297,7 @@ void PIC_DrvInit
 	void
 )
 {
-	idBalDrv = msgQCreate( PIC_N_MESSAGES_MAX, PIC_RAW_MSG_SIZE, MSG_Q_FIFO );
+	idBalDrv = msgQCreate( PIC_N_MESSAGES_MAX, PIC_TAILLE_MESSAGE_BRUT, MSG_Q_FIFO );
 	
 	/* TODO : 
 	 * - Lancer la tâche de scrutation
