@@ -9,6 +9,7 @@
 /* project includes */
 #include "PIC_TacheScrutation.h"
 #include "PIC.h"
+#include "PIC_ListeCapteurs.h"
 
 
 /* === DEFINITIONS DE CONSTANTES === */
@@ -22,38 +23,27 @@
 static int compteurMessage = 0;
 
 
-/* === PROTOTYPES DES FONCTIONS LOCALES === */
-
-/******************************************************************************/
-PIC_DATA_STRUCTURE * PIC_RechercheCapteur
-(
-	char const adresseCapteur
-);
-
-
 /* === IMPLEMENTATION === */
 
 /******************************************************************************/
 int PIC_TacheScrutation
 (
 	MSG_Q_ID const idBalDrv
-	/* a passer egalement : pointeur vers la liste/le tableau des capteurs 
-	 * installes 
-	 */
 )
 {
 	/* Algo :
 	 * - recuperation du dernier message situe dans BalDrv 
 	 * - numerotation, timestampage
 	 * - recherche du capteur correspondant
-	 * - si capteur trouve, depot du message dans la bal du capteur
+	 * - si capteur trouve, depot du message dans la bal du capteur (retrait 
+	 * d'un message si bal pleine)
 	 * - goto le debut :D
 	 */
 	
 	PIC_MESSAGE_BRUTE     messageRecu;	
 	PIC_MESSAGE_CAPTEUR   messageTraite;
 	
-	PIC_DATA_STRUCTURE * destinataire;
+	PIC_HEADER * destinataire;
 	
 	for( ;; )
 	{
@@ -63,20 +53,16 @@ int PIC_TacheScrutation
 		//messageTraite.tArrivee =
 		messageTraite.numMessage = ++compteurMessage;
 		
-		destinataire = PIC_RechercheCapteur( messageRecu.adresseCapteur );
+		destinataire = ChercherCapteur( messageRecu.adresseCapteur );
 
 		if( destinataire != NULL )
 		{
-			msgQSend( destinataire->idBAL, ( char * )&messageTraite, PIC_TAILLE_MSG_TRAITE, NO_WAIT, MSG_PRI_NORMAL );
+			if ( msgQNumMsgs( destinataire->specific.idBAL ) == PIC_N_MESSAGES_MAX )
+			{
+				msgQReceive( destinataire->specific.idBAL, NULL, 0, NO_WAIT );
+			}
+			
+			msgQSend( destinataire->specific.idBAL, ( char * )&messageTraite, PIC_TAILLE_MSG_TRAITE, NO_WAIT, MSG_PRI_NORMAL );
 		}
 	}
-}
-
-/******************************************************************************/
-PIC_DATA_STRUCTURE * PIC_RechercheCapteur
-(
-	char const adresseCapteur
-)
-{
-	
 }

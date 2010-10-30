@@ -22,7 +22,6 @@
 /* === DEFINITIONS DE CONSTANTES === */
 
 #define PIC_N_CAPTEURS_MAX             ( 255 )
-#define PIC_N_MESSAGES_MAX             ( 10 )
 #define NIVEAU_IT					   ( 42 )
 
 

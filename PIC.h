@@ -20,6 +20,8 @@
 #define PIC_TAILLE_MSG_BRUTE           ( sizeof( PIC_MESSAGE_BRUTE ) )
 #define PIC_TAILLE_MSG_TRAITE          ( sizeof( PIC_MESSAGE_CAPTEUR ) )
 
+#define PIC_N_MESSAGES_MAX             ( 10 )
+
 
 /* === DECLARATIONS DE TYPES DE DONNEES === */
 

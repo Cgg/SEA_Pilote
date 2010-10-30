@@ -28,9 +28,6 @@
 int PIC_TacheScrutation
 (
 	MSG_Q_ID const idBalDrv
-	/* a passer egalement : pointeur vers la liste/le tableau des capteurs 
-	 * installes 
-	 */
 );
 
 #endif
