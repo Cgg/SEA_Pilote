@@ -11,7 +11,6 @@
 
 /* system includes */
 #include "stdlib.h"
-#include "msgQLib.h"
 #include "timers.h"
 
 /* project includes */
@@ -22,7 +21,6 @@
 #define PIC_N_CAPTEURS_MAX             ( 255 )
 #define PIC_N_MESSAGES_MAX             ( 10 )
 #define PIC_RAW_MSG_SIZE			   ( 4 )
-#define NIVEAU_IT					   ( 2 * sizeof( int ) )
 
 
 /* === DECLARATIONS DE TYPES DE DONNEES === */

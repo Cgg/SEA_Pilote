@@ -12,6 +12,9 @@
 
 /* system includes */
 #include "iosLib.h"
+#include "msgQLib.h"
+
+ /* === DECLARATION DE CONSTANTES */
 
 
 /* === DECLARATIONS DE TYPES DE DONNEES === */

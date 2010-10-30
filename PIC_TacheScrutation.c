@@ -22,7 +22,14 @@
 
 static int compteurMessage = 0;
 
+
 /* === PROTOTYPES DES FONCTIONS LOCALES === */
+
+/******************************************************************************/
+PIC_DATA_STRUCTURE * PIC_RechercheCapteur
+(
+	int const adresseCapteur
+);
 
 
 /* === IMPLEMENTATION === */
@@ -44,5 +51,12 @@ int PIC_TacheScrutation
 	 * - goto le debut :D
 	 */
 	
+	char * bufferReception;
 	
+	for( ;; )
+	{
+		msgQReceive( idBalDrv, bufferReception, 0, WAIT_FOREVER );
+		
+		PIC_DATA_STRUCTURE * capteurDestinataire = PIC_RechercheCapteur(  );
+	}
 }
