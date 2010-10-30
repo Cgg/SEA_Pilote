@@ -19,8 +19,8 @@
 
 #define PIC_N_CAPTEURS_MAX             ( 255 )
 #define PIC_N_MESSAGES_MAX             ( 10 )
-#define PIC_RAW_MSG_SIZE			   ( 4 )
-#define NIVEAU_IT					   2 * sizeof( int )
+#define PIC_RAW_MSG_SIZE			   2 * sizeof( int )
+#define NIVEAU_IT					   ( 42 )
 
 
 /* === DECLARATIONS DE TYPES DE DONNEES === */
