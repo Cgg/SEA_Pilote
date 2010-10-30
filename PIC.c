@@ -7,15 +7,17 @@
  * un jour peut-être
  */
 
-/* system includes */
+/* === INCLUSIONS === */
+
+/* inclusions systeme */
 #include "stdlib.h"
 #include "msgQLib.h"
 #include "timers.h"
 
-/* project includes */
+/* inclusions projet */
 #include "PIC.h"
 
-/* === DEFINITIONS CONSTANTES === */
+/* === DEFINITIONS DE CONSTANTES === */
 
 #define PIC_N_CAPTEURS_MAX             ( 255 )
 #define PIC_N_MESSAGES_MAX             ( 10 )
@@ -25,60 +27,14 @@
 
 /* === DECLARATIONS DE TYPES DE DONNEES === */
 
-/* temps */
-typedef struct
-{
-    time_t      tv_sec;         /* seconds */
-    long        tv_nsec;        /* nanoseconds (0 -1,000,000,000) */
-
-} timespec;
-
-
-/* type du message delivre par un capteur. */
-typedef int MESSAGE;
-
-/* Structure de donnees des messages stockes par chaque device en attendant un 
- * iosRead.
- */
-typedef struct
-{
-	int        numMessage;
-	timespec   tArrivee;
-	MESSAGE    message;
-
-} PIC_MESSAGE_CAPTEUR;
-
-
-/* Structure de donnees specifique au PIC. Contient :
- * - idBAL : identifiant de la boite aux lettre ou sont stockes les messages 
- * envoyes par le capteur et non lu. Capacite max : 10 messages. 
- * - adresseCapteur : adresse du capteur fournie par l'utilisateur.
- * - numDriver : index du driver utilise par le device dans la table des drivers
- */
-typedef struct
-{
-	MSG_Q_ID   idBAL;
-	int        adresseCapteur;
-	int        numero_driver;
-
-} PIC_DATA_STRUCTURE;
-
-
-/* Structure de donnees standard pour un pilote VxWorks */
-typedef struct
-{
-	DEV_HDR              dev_hdr;
-	PIC_DATA_STRUCTURE   specific;
-
-} PIC_HEADER;
-
 
 /* === DONNEES STATIQUES === */
 
 static int numDriver     = -1;
 static int nombreDevices = 0;
 
-static MSG_Q_ID idBalDrv;
+static MSG_Q_ID   idBalDrv;
+static int        idTacheScrutation;
 
 /* Adresse du buffer de la carte reseau */
 static char * msg_buff = NULL;
@@ -122,7 +78,7 @@ int PIC_IoCtl
 int PIC_HandlerIT
 (
 	void
-)
+);
 
 /* prototype des autres fonctions locales */
 
@@ -329,12 +285,12 @@ int PIC_HandlerIT
 )
 {
 	char * msg;
+
 	sysIntDisable( NIVEAU_IT );
 	msg = malloc( PIC_RAW_MSG_SIZE );
 	memcpy( msg, msg_buff, PIC_RAW_MSG_SIZE );
 	msgQSend( idBalDrv, msg, PIC_RAW_MSG_SIZE );
-	sysIntEnable( NIVEAU_IT );
-	
+	sysIntEnable( NIVEAU_IT );	
 }
 
 /******************************************************************************/
@@ -343,9 +299,7 @@ void PIC_DrvInit
 	void
 )
 {
-	
 	idBalDrv = msgQCreate( PIC_N_MESSAGES_MAX, PIC_RAW_MSG_SIZE, MSG_Q_FIFO );
-	
 	
 	/* TODO : 
 	 * - Lancer la tâche de scrutation

@@ -10,3 +10,23 @@
  *
  * copyright 2010 Lize / Geiger
  */
+
+#ifndef PIC_TACHE_SCRUTATION
+#define PIC_TACHE_SCRUTATION
+
+/* === INCLUDES === */
+#include "msgQLib.h"
+
+/* === PROTOTYPES DES FONCTIONS EXPOSEES === */
+
+/******************************************************************************/
+int PIC_TacheScrutation
+(
+	MSG_Q_ID const idBalDrv
+	/* a passer egalement : pointeur vers la liste/le tableau des capteurs 
+	 * installes 
+	 */
+);
+
+#endif
+/* PIC_TACHE_SCRUTATION */
