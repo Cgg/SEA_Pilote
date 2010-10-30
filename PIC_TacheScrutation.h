@@ -16,9 +16,6 @@
 
 /* === INCLUDES === */
 
-/* System includes */
-#include "taskLib.h"
-
 
 /* === PROTOTYPES DES FONCTIONS EXPOSEES === */
 

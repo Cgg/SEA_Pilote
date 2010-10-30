@@ -25,30 +25,6 @@
 
 /* === DECLARATIONS DE TYPES DE DONNEES === */
 
-/* temps */
-typedef struct
-{
-    time_t      tv_sec;         /* seconds */
-    long        tv_nsec;        /* nanoseconds (0 -1,000,000,000) */
-
-} timespec;
-
-
-/* type du message delivre par un capteur. */
-typedef int MESSAGE;
-
-/* Structure de donnees des messages stockes par chaque device en attendant un 
- * iosRead.
- */
-typedef struct
-{
-	int        numMessage;
-	timespec   tArrivee;
-	MESSAGE    message;
-
-} PIC_MESSAGE_CAPTEUR;
-
-
 /* Structure de donnees specifique au PIC. Contient :
  * - idBAL : identifiant de la boite aux lettre ou sont stockes les messages 
  * envoyes par le capteur et non lu. Capacite max : 10 messages. 

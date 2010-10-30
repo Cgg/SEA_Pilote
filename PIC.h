@@ -42,6 +42,28 @@ typedef enum
 	
 } PIC_CR_ADD;
 
+/* temps */
+typedef struct
+{
+    time_t      tv_sec;         /* seconds */
+    long        tv_nsec;        /* nanoseconds (0 -1,000,000,000) */
+
+} timespec;
+
+/* type du message delivre par un capteur. */
+typedef int MESSAGE;
+
+/* Structure de donnees des messages stockes par chaque device en attendant un 
+ * iosRead.
+ */
+typedef struct
+{
+	int        numMessage;
+	timespec   tArrivee;
+	MESSAGE    message;
+
+} PIC_MESSAGE_CAPTEUR;
+
 
 /* === PROTOTYPES DES FONCTIONS EXPOSEES === */
 
