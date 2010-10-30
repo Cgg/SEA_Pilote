@@ -20,7 +20,7 @@
 #define PIC_N_CAPTEURS_MAX             ( 255 )
 #define PIC_N_MESSAGES_MAX             ( 10 )
 #define PIC_RAW_MSG_SIZE			   ( 4 )
-#define NIVEAU_IT					   ( 42 )
+#define NIVEAU_IT					   2 * sizeof( int )
 
 
 /* === DECLARATIONS DE TYPES DE DONNEES === */
@@ -78,10 +78,10 @@ typedef struct
 static int numDriver     = -1;
 static int nombreDevices = 0;
 
-static MSG_Q_ID idBal_drv;
+static MSG_Q_ID idBalDrv;
 
 /* Adresse du buffer de la carte reseau */
-static char* msg_buff = NULL;
+static char * msg_buff = NULL;
 
 /* === PROTOTYPES DES FONCTIONS LOCALES === */
 
@@ -328,11 +328,12 @@ int PIC_HandlerIT
 	void
 )
 {
-	sysIntDisable(NIVEAU_IT);
-	char* msg = malloc( PIC_RAW_MSG_SIZE );
-	memcpy(mdg, msg_buff, PIC_RAW_MSG_SIZE );
-	msgQSend(idBal_drv, msg, PIC_RAW_MSG_SIZE);
-	sysIntEnable(NIVEAU_IT);
+	char * msg;
+	sysIntDisable( NIVEAU_IT );
+	msg = malloc( PIC_RAW_MSG_SIZE );
+	memcpy( msg, msg_buff, PIC_RAW_MSG_SIZE );
+	msgQSend( idBalDrv, msg, PIC_RAW_MSG_SIZE );
+	sysIntEnable( NIVEAU_IT );
 	
 }
 
@@ -343,7 +344,7 @@ void PIC_DrvInit
 )
 {
 	
-	idBal_drv = msgQCreate( PIC_N_MESSAGES_MAX, PIC_RAW_MSG_SIZE, MSG_Q_FIFO );
+	idBalDrv = msgQCreate( PIC_N_MESSAGES_MAX, PIC_RAW_MSG_SIZE, MSG_Q_FIFO );
 	
 	
 	/* TODO : 
@@ -359,5 +360,5 @@ void PIC_DrvConclude
 	void
 )
 {
-	msgQDelete(idBal_drv);
+	msgQDelete( idBalDrv );
 }
