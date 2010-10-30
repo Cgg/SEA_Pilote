@@ -27,29 +27,6 @@
 
 /* === DECLARATIONS DE TYPES DE DONNEES === */
 
-/* Structure de donnees specifique au PIC. Contient :
- * - idBAL : identifiant de la boite aux lettre ou sont stockes les messages 
- * envoyes par le capteur et non lu. Capacite max : 10 messages. 
- * - adresseCapteur : adresse du capteur fournie par l'utilisateur.
- * - numDriver : index du driver utilise par le device dans la table des drivers
- */
-typedef struct
-{
-	MSG_Q_ID   idBAL;
-	int        adresseCapteur;
-	int        numero_driver;
-
-} PIC_DATA_STRUCTURE;
-
-
-/* Structure de donnees standard pour un pilote VxWorks */
-typedef struct
-{
-	DEV_HDR              dev_hdr;
-	PIC_DATA_STRUCTURE   specific;
-
-} PIC_HEADER;
-
 
 /* === DONNEES STATIQUES === */
 
