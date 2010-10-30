@@ -19,6 +19,7 @@
 
 #define PIC_N_CAPTEURS_MAX             ( 255 )
 #define PIC_N_MESSAGES_MAX             ( 10 )
+#define PIC_RAW_MSG_SIZE			   ( 16 )
 
 
 /* === DECLARATIONS DE TYPES DE DONNEES === */
@@ -76,7 +77,7 @@ typedef struct
 static int numDriver     = -1;
 static int nombreDevices = 0;
 
-static MSG_Q_ID bal_drv;
+static MSG_Q_ID idBal_drv;
 
 /* Adresse du buffer de la carte reseau */
 static char* msg_buff = NULL;
@@ -327,9 +328,9 @@ int PIC_HandlerIT
 )
 {
 	sysIntDisable(42);
-	char* msg = malloc( 2 * sizeof( int ) );
-	memcpy(msg_buff, mdg,2 * sizeof( int ) );
-	msgQSend(bal_drv, msg, 2 * sizeof( int ));
+	char* msg = malloc( PIC_RAW_MSG_SIZE );
+	memcpy(msg_buff, mdg, PIC_RAW_MSG_SIZE );
+	msgQSend(idBal_drv, msg, PIC_RAW_MSG_SIZE);
 	sysIntEnable(42);
 	
 }
@@ -341,7 +342,7 @@ void PIC_DrvInit
 )
 {
 	
-	bal_drv = msgQCreate( PIC_N_MESSAGES_MAX, sizeof( PIC_MSG ), MSG_Q_FIFO );
+	idBal_drv = msgQCreate( PIC_N_MESSAGES_MAX, PIC_RAW_MSG_SIZE, MSG_Q_FIFO );
 	
 	
 	/* TODO : 
@@ -357,5 +358,5 @@ void PIC_DrvConclude
 	void
 )
 {
-	msgQDelete(bal_drv);
+	msgQDelete(idBal_drv);
 }
