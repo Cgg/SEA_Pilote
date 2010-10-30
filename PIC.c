@@ -204,6 +204,10 @@ PIC_CR_ADD PIC_DevAdd
 		
 		return nom_pris;
 	}
+	
+	AjouterCapteur( desc );
+	
+	return nombreDevices;
 }
 
 /******************************************************************************/
@@ -224,6 +228,8 @@ int PIC_DevDelete
 	if ( ( pDevHdr!= NULL )  && ( suite[0] == '\0' ) )
 	{
 		msgQDelete( ( ( PIC_HEADER * )pDevHdr )->specific.idBAL );
+		
+		RetirerCapteur( ( ( PIC_HEADER * )pDevHdr )->specific.adresseCapteur );
 		
 		iosDevDelete( pDevHdr );
 		
@@ -298,9 +304,11 @@ int PIC_HandlerIT
 
 	sysIntEnable( NIVEAU_IT );
 	
+	free( msg );
+	
 	/* TODO : 
 	 * - Retirer un message de la file si celle-ci est pleine.
-	 * - Liberer msg ? */
+	 */
 }
 
 /******************************************************************************/

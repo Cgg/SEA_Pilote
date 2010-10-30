@@ -101,13 +101,6 @@ typedef struct
 
 } PIC_HEADER;
 
-/* Structure du message brut */
-typedef struct
-{
-	int	adCapteur;
-	int valeur;
-
-} PIC_MSG_BRUT;
 
 /* === PROTOTYPES DES FONCTIONS EXPOSEES === */
 
