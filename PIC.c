@@ -286,9 +286,9 @@ int PIC_HandlerIT
 	char * msg;
 
 	sysIntDisable( NIVEAU_IT );
-	msg = malloc( PIC_TAILLE_MESSAGE_BRUT );
-	memcpy( msg, msg_buff, PIC_TAILLE_MESSAGE_BRUT );
-	msgQSend( idBalDrv, msg, PIC_TAILLE_MESSAGE_BRUT );
+	msg = malloc( sizeof( PIC_MSG_BRUT ) );
+	memcpy( msg, msg_buff, sizeof( PIC_MSG_BRUT ) );
+	msgQSend( idBalDrv, msg, sizeof( PIC_MSG_BRUT ) );
 	sysIntEnable( NIVEAU_IT );	
 }
 
@@ -298,7 +298,7 @@ void PIC_DrvInit
 	void
 )
 {
-	idBalDrv = msgQCreate( PIC_N_MESSAGES_MAX, PIC_TAILLE_MESSAGE_BRUT, MSG_Q_FIFO );
+	idBalDrv = msgQCreate( PIC_N_MESSAGES_MAX, sizeof( PIC_MSG_BRUT ), MSG_Q_FIFO );
 	
 	/* TODO : 
 	 * - Lancer la tâche de scrutation

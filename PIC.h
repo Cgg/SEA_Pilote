@@ -13,11 +13,6 @@
 /* inclusions systeme */
 #include "iosLib.h"
 
-/* === CONSTANTES === */
-
-/* Taille d'un message tire du buffer de la carte reseau */
-static const int PIC_TAILLE_MSG_BRUT = 2 * sizeof( int );
-
 /* === DECLARATIONS DE TYPES DE DONNEES === */
 
 /* Définition de codes retours */
@@ -91,6 +86,12 @@ typedef struct
 
 } PIC_HEADER;
 
+/* Structure du message brut */
+typedef struct
+{
+	int	adCapteur;
+	int valeur;
+} PIC_MSG_BRUT;
 
 /* === PROTOTYPES DES FONCTIONS EXPOSEES === */
 
