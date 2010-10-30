@@ -10,3 +10,23 @@
  *
  * copyright 2010 Lize / Geiger
  */
+
+#ifndef PIC_TACHE_SCRUT
+#define PIC_TACHE_SCRUT
+
+/* === INCLUDES === */
+
+/* System includes */
+#include "taskLib.h"
+
+
+/* === PROTOTYPES DES FONCTIONS EXPOSEES === */
+
+/******************************************************************************/
+int PIC_TacheScrutation
+(
+	void
+);
+
+#endif
+/* PIC_TACHE_SCRUTATION */

@@ -7,6 +7,8 @@
  * un jour peut-être
  */
 
+/* === INCLUDES === */
+
 /* system includes */
 #include "stdlib.h"
 #include "msgQLib.h"
@@ -15,7 +17,7 @@
 /* project includes */
 #include "PIC.h"
 
-/* === DEFINITIONS CONSTANTES === */
+/* === DEFINITIONS DE CONSTANTES === */
 
 #define PIC_N_CAPTEURS_MAX             ( 255 )
 #define PIC_N_MESSAGES_MAX             ( 10 )
@@ -76,10 +78,10 @@ typedef struct
 static int numDriver     = -1;
 static int nombreDevices = 0;
 
-static MSG_Q_ID bal_drv;
+static MSG_Q_ID balDrv;
 
 /* Adresse du buffer de la carte reseau */
-static char* msg_buff = NULL;
+static char * msg_buff = NULL;
 
 /* === PROTOTYPES DES FONCTIONS LOCALES === */
 
@@ -120,7 +122,7 @@ int PIC_IoCtl
 int PIC_HandlerIT
 (
 	void
-)
+);
 
 /* prototype des autres fonctions locales */
 
@@ -341,7 +343,7 @@ void PIC_DrvInit
 )
 {
 	
-	bal_drv = msgQCreate( PIC_N_MESSAGES_MAX, sizeof( PIC_MSG ), MSG_Q_FIFO );
+	balDrv = msgQCreate( PIC_N_MESSAGES_MAX, sizeof( PIC_MSG ), MSG_Q_FIFO );
 	
 	
 	/* TODO : 

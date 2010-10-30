@@ -8,8 +8,13 @@
 #ifndef PIC_H
 #define PIC_H
 
+/* === INCLUDES === */
+
 /* system includes */
 #include "iosLib.h"
+
+
+/* === DECLARATIONS DE TYPES DE DONNEES === */
 
 /* Définition de codes retours */
 typedef enum 
@@ -37,6 +42,8 @@ typedef enum
 	
 } PIC_CR_ADD;
 
+
+/* === PROTOTYPES DES FONCTIONS EXPOSEES === */
 
 /* primitives de configuration du pilote */
 
