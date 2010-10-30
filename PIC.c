@@ -42,7 +42,7 @@ typedef int MESSAGE;
 typedef struct
 {
 	/* Gestion des engorgements de messages */
-	int   bufferPlein;
+	int   bufferPlein;  /* 0/1, remplacer par un semaphore mutex ? */
 	int   nMessagesPerdus;
 	
 	/* Message en lui-meme */
@@ -127,6 +127,14 @@ int PIC_IoCtl
 	int const fileDescriptor, 
 	int const functionToCall,
 	int const arguments
+);
+
+/* Handler d'interruptions envoyees par la carte des capteurs */
+
+/******************************************************************************/
+int PIC_HandlerIT
+(
+	void
 );
 
 /* prototype des autres fonctions locales */
@@ -328,6 +336,15 @@ int PIC_IoCtl
 }
 
 /******************************************************************************/
+int PIC_HandlerIT
+(
+	void
+)
+{
+	/* TODO : ecrire le handler d'it. */
+}
+
+/******************************************************************************/
 void PIC_DrvInit
 (
 	void
@@ -335,8 +352,12 @@ void PIC_DrvInit
 {
 	tamponItScrutation = malloc( sizeof( PIC_BUF_TEMP ) );
 	
+	tamponItScrutation->bufferPlein     = 0;
+	tamponItScrutation->nMessagesPerdus = 0;
+	
 	/* TODO : 
 	 * - Lancer la tâche de scrutation
+	 * - Initialiser le handler d'it
 	 * - Initialiser le temps
 	 */
 }
