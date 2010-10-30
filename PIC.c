@@ -9,6 +9,7 @@
 
 /* system includes */
 #include "stdlib.h"
+#include "msgQLib.h"
 #include "timers.h"
 
 /* project includes */
@@ -16,7 +17,8 @@
 
 /* === DEFINITIONS CONSTANTES === */
 
-#define N_CAPTEURS_MAX                 ( 255 )
+#define PIC_N_CAPTEURS_MAX             ( 255 )
+#define PIC_N_MESSAGES_MAX             ( 10 )
 
 
 /* === DECLARATIONS DE TYPES DE DONNEES === */
@@ -29,8 +31,10 @@ typedef struct
 
 } timespec;
 
+
 /* type du message delivre par un capteur. */
 typedef int MESSAGE;
+
 
 /* Structure de donnees du tampon situe entre le handler d'it et la tache de
  * scrutation. 
@@ -47,6 +51,7 @@ typedef struct
 	
 } PIC_BUF_TEMP;
 
+
 /* Structure de donnees des messages stockes par chaque device en attendant un 
  * iosRead.
  */
@@ -58,6 +63,7 @@ typedef struct
 
 } PIC_MESSAGE_CAPTEUR;
 
+
 /* Structure de donnees specifique au PIC. Contient :
  * - idBAL : identifiant de la boite aux lettre ou sont stockes les messages 
  * envoyes par le capteur et non lu. Capacite max : 10 messages. 
@@ -66,11 +72,12 @@ typedef struct
  */
 typedef struct
 {
-	int   idBAL;
-	int   adresseCapteur;
-	int   numero_driver;
-	
+	MSG_Q_ID   idBAL;
+	int        adresseCapteur;
+	int        numero_driver;
+
 } PIC_DATA_STRUCTURE;
+
 
 /* Structure de donnees standard pour un pilote VxWorks */
 typedef struct
@@ -203,28 +210,44 @@ PIC_CR_ADD PIC_DevAdd
 	int    const adresseCapteur
 )
 {
-	int retour = driver_pas_installe;
+	PIC_HEADER * desc;
 	
 	if ( numDriver != -1 )
 	{
+		return driver_pas_installe;
+	}
 		/* TODO : checker si un device avec meme nom ou meme adresse n'existe
 		 * pas deja. */
-		
-		retour = n_capteurs_overflow;
-		
-		if( nombreDevices < N_CAPTEURS_MAX )
-		{
-			PIC_HEADER * desc = ( PIC_HEADER * ) malloc( sizeof( PIC_HEADER ) );
-			
-			( desc->specific ).numero_driver = nombreDevices++ ;
-	
-			iosDevAdd ( ( DEV_HDR * )desc, name, numDriver);
-			
-			retour = nombreDevices ;
-		}		
+	if ( nombreDevices >= PIC_N_CAPTEURS_MAX )
+	{
+		return n_capteurs_overflow;
 	}
 
-	return retour;
+	desc = ( PIC_HEADER * ) malloc( sizeof( PIC_HEADER ) );
+	
+	desc->specific.numero_driver = nombreDevices++;
+	
+	desc->specific.idBAL = msgQCreate( PIC_N_MESSAGES_MAX, sizeof( PIC_MESSAGE_CAPTEUR ), MSG_Q_FIFO );
+
+	if ( desc->specific.idBAL == NULL )
+	{
+		nombreDevices--;
+		
+		free( desc );
+		
+		return no_room_add;
+	}
+	
+	if ( iosDevAdd ( ( DEV_HDR * )desc, name, numDriver) == ERROR )
+	{
+		nombreDevices--;
+		
+		msgQDelete( desc->specific.idBAL );
+		
+		free( desc );
+		
+		return nom_pris;
+	}
 }
 
 /******************************************************************************/
@@ -306,7 +329,10 @@ void PIC_DrvInit
 {
 	tamponItScrutation = malloc( sizeof( PIC_BUF_TEMP ) );
 	
-	/* TODO : Initialiser le temps */
+	/* TODO : 
+	 * - Lancer la tâche de scrutation
+	 * - Initialiser le temps
+	 */
 }
 
 /******************************************************************************/

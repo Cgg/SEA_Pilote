@@ -32,7 +32,8 @@ typedef enum
 	driver_pas_installe = -1,
 	adresse_prise       = -2,
 	nom_pris            = -3,
-	n_capteurs_overflow = -4
+	n_capteurs_overflow = -4,
+	no_room_add         = -5
 	
 } PIC_CR_ADD;
 
