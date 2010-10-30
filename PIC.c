@@ -294,7 +294,11 @@ int PIC_HandlerIT
 
 	msgQSend( idBalDrv, msg, PIC_TAILLE_MSG_BRUTE, NO_WAIT, MSG_PRI_NORMAL );
 
-	sysIntEnable( NIVEAU_IT );	
+	sysIntEnable( NIVEAU_IT );
+	
+	/* TODO : 
+	 * - Retirer un message de la file si celle-ci est pleine.
+	 * - Liberer msg ? */
 }
 
 /******************************************************************************/
