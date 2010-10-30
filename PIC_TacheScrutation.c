@@ -20,6 +20,7 @@
 
 /* === DONNEES STATIQUES === */
 
+static int compteurMessage = 0;
 
 /* === PROTOTYPES DES FONCTIONS LOCALES === */
 
@@ -35,4 +36,11 @@ int PIC_TacheScrutation
 	 */
 )
 {
+	/* Algo :
+	 * - recuperation du dernier message situe dans BalDrv 
+	 * - numerotation, timestampage
+	 * - recherche du capteur correspondant
+	 * - si capteur trouve, depot du message dans la bal du capteur
+	 * - goto le debut :D
+	 */
 }
