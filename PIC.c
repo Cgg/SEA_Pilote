@@ -17,6 +17,7 @@
 
 /* inclusions projet */
 #include "PIC.h"
+#include "PIC_ListeCapteurs.h"
 
 /* === DEFINITIONS DE CONSTANTES === */
 
@@ -167,10 +168,11 @@ PIC_CR_ADD PIC_DevAdd
 	{
 		return driver_pas_installe;
 	}
-	
-	/* TODO : checker si un device avec meme nom ou meme adresse n'existe
-	 * pas deja. 
-	 */
+
+	if ( ChercherCapteur( adresseCapteur ) != NULL )
+	{
+		return adresse_prise;
+	}
 	
 	if ( nombreDevices >= PIC_N_CAPTEURS_MAX )
 	{
