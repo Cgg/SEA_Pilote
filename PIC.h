@@ -14,6 +14,7 @@
 #include "iosLib.h"
 #include "msgQLib.h"
 
+
  /* === DECLARATION DE CONSTANTES */
 
 #define PIC_TAILLE_MSG_BRUTE           ( sizeof( PIC_MESSAGE_BRUTE ) )
@@ -100,6 +101,12 @@ typedef struct
 
 } PIC_HEADER;
 
+/* Structure du message brut */
+typedef struct
+{
+	int	adCapteur;
+	int valeur;
+} PIC_MSG_BRUT;
 
 /* === PROTOTYPES DES FONCTIONS EXPOSEES === */
 

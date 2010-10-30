@@ -287,13 +287,13 @@ int PIC_HandlerIT
 	char * msg;
 
 	sysIntDisable( NIVEAU_IT );
-	
+
 	msg = malloc( PIC_TAILLE_MSG_BRUTE );
 	
 	memcpy( msg, msg_buff, PIC_TAILLE_MSG_BRUTE );
 	
 	msgQSend( idBalDrv, msg, PIC_TAILLE_MSG_BRUTE, NO_WAIT, MSG_PRI_NORMAL );
-	
+
 	sysIntEnable( NIVEAU_IT );	
 }
 
