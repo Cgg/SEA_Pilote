@@ -216,8 +216,11 @@ PIC_CR_ADD PIC_DevAdd
 	{
 		return driver_pas_installe;
 	}
-		/* TODO : checker si un device avec meme nom ou meme adresse n'existe
-		 * pas deja. */
+	
+	/* TODO : checker si un device avec meme nom ou meme adresse n'existe
+	 * pas deja. 
+	 */
+	
 	if ( nombreDevices >= PIC_N_CAPTEURS_MAX )
 	{
 		return n_capteurs_overflow;
@@ -267,7 +270,10 @@ int PIC_DevDelete
 	
 	if ( ( pDevHdr!= NULL )  && ( suite[0] == '\0' ) )
 	{
+		msgQDelete( ( ( PIC_HEADER * )pDevHdr )->specific.idBAL );
+		
 		iosDevDelete( pDevHdr );
+		
 		free( pDevHdr );
 		
 		retour = 0;
