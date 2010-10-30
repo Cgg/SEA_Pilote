@@ -78,6 +78,7 @@ static int nombreDevices = 0;
 
 static MSG_Q_ID bal_drv;
 
+/* Adresse du buffer de la carte reseau */
 static char* msg_buff = NULL;
 
 /* === PROTOTYPES DES FONCTIONS LOCALES === */
@@ -326,11 +327,10 @@ int PIC_HandlerIT
 )
 {
 	sysIntDisable(42);
-	/*work in progress*/
-	msgQSend;
+	char* msg = malloc( 2 * sizeof( int ) );
+	memcpy(msg_buff, mdg,2 * sizeof( int ) );
+	msgQSend(bal_drv, msg, 2 * sizeof( int ));
 	sysIntEnable(42);
-	
-)
 	
 }
 
@@ -357,5 +357,5 @@ void PIC_DrvConclude
 	void
 )
 {
-	free( tamponItScrutation );
+	msgQDelete(bal_drv);
 }
