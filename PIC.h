@@ -18,6 +18,7 @@
  /* === DECLARATION DE CONSTANTES */
 
 #define PIC_TAILLE_MSG_BRUTE           ( sizeof( PIC_MESSAGE_BRUTE ) )
+#define PIC_TAILLE_MSG_TRAITE          ( sizeof( PIC_MESSAGE_CAPTEUR ) )
 
 
 /* === DECLARATIONS DE TYPES DE DONNEES === */
