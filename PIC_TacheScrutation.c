@@ -27,7 +27,7 @@ static int compteurMessage = 0;
 /******************************************************************************/
 PIC_DATA_STRUCTURE * PIC_RechercheCapteur
 (
-	int const adresseCapteur
+	char const adresseCapteur
 );
 
 
@@ -50,17 +50,33 @@ int PIC_TacheScrutation
 	 * - goto le debut :D
 	 */
 	
-	char              * bufferReception;
-	PIC_MESSAGE_BRUTE * messageRecu;
+	PIC_MESSAGE_BRUTE     messageRecu;	
+	PIC_MESSAGE_CAPTEUR   messageTraite;
 	
-	 bufferReception = ( char * )malloc( PIC_TAILLE_MSG_BRUTE );
+	PIC_DATA_STRUCTURE * destinataire;
 	
 	for( ;; )
 	{
-		msgQReceive( idBalDrv, bufferReception, PIC_TAILLE_MSG_BRUTE, WAIT_FOREVER );
+		msgQReceive( idBalDrv, ( char * )&messageRecu, PIC_TAILLE_MSG_BRUTE, WAIT_FOREVER );
+		
+		messageTraite.message    = messageRecu.message;
+		//messageTraite.tArrivee =
+		messageTraite.numMessage = ++compteurMessage;
+		
+		destinataire = PIC_RechercheCapteur( messageRecu.adresseCapteur );
 
-		messageRecu = ( PIC_MESSAGE_BRUTE * )bufferReception;
+		if( destinataire != NULL )
+		{
+			msgQSend( destinataire->idBAL, ( char * )&messageTraite, PIC_TAILLE_MSG_TRAITE, NO_WAIT, MSG_PRI_NORMAL );
+		}
 	}
+}
+
+/******************************************************************************/
+PIC_DATA_STRUCTURE * PIC_RechercheCapteur
+(
+	char const adresseCapteur
+)
+{
 	
-	free( bufferReception );
 }

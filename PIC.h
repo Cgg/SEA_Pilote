@@ -106,6 +106,7 @@ typedef struct
 {
 	int	adCapteur;
 	int valeur;
+
 } PIC_MSG_BRUT;
 
 /* === PROTOTYPES DES FONCTIONS EXPOSEES === */
