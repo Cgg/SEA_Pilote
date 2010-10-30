@@ -19,7 +19,8 @@
 
 #define PIC_N_CAPTEURS_MAX             ( 255 )
 #define PIC_N_MESSAGES_MAX             ( 10 )
-#define PIC_RAW_MSG_SIZE			   ( 16 )
+#define PIC_RAW_MSG_SIZE			   ( 4 )
+#define NIVEAU_IT					   ( 42 )
 
 
 /* === DECLARATIONS DE TYPES DE DONNEES === */
@@ -327,11 +328,11 @@ int PIC_HandlerIT
 	void
 )
 {
-	sysIntDisable(42);
+	sysIntDisable(NIVEAU_IT);
 	char* msg = malloc( PIC_RAW_MSG_SIZE );
-	memcpy(msg_buff, mdg, PIC_RAW_MSG_SIZE );
+	memcpy(mdg, msg_buff, PIC_RAW_MSG_SIZE );
 	msgQSend(idBal_drv, msg, PIC_RAW_MSG_SIZE);
-	sysIntEnable(42);
+	sysIntEnable(NIVEAU_IT);
 	
 }
 
