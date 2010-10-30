@@ -16,10 +16,8 @@
 
  /* === DECLARATION DE CONSTANTES */
 
-/* === CONSTANTES === */
+#define PIC_TAILLE_MSG_BRUTE           ( sizeof( PIC_MESSAGE_BRUTE ) )
 
-/* Taille d'un message tire du buffer de la carte reseau */
-static const int PIC_TAILLE_MSG_BRUT = 2 * sizeof( char );
 
 /* === DECLARATIONS DE TYPES DE DONNEES === */
 
@@ -63,6 +61,14 @@ typedef int MESSAGE;
 /* Structure de donnees des messages stockes par chaque device en attendant un 
  * iosRead.
  */
+
+typedef struct
+{
+	char      adresseCapteur;
+	MESSAGE   message;
+	
+} PIC_MESSAGE_BRUTE;
+
 typedef struct
 {
 	int        numMessage;
@@ -80,7 +86,7 @@ typedef struct
 typedef struct
 {
 	MSG_Q_ID   idBAL;
-	int        adresseCapteur;
+	char       adresseCapteur;
 	int        numero_driver;
 
 } PIC_DATA_STRUCTURE;
