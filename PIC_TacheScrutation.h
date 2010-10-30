@@ -17,6 +17,11 @@
 /* === INCLUDES === */
 #include "msgQLib.h"
 
+/* === DEFINITION DE CONSTANTES === */
+
+#define PRIORITE_SCRUTATION            ( 1 )
+
+
 /* === PROTOTYPES DES FONCTIONS EXPOSEES === */
 
 /******************************************************************************/

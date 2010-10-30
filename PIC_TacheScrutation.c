@@ -13,8 +13,6 @@
 
 /* === DEFINITIONS DE CONSTANTES === */
 
-#define PRIORITE                       ( 1 )
-
 
 /* === DECLARATIONS DE TYPES DE DONNEES === */
 

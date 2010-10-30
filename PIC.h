@@ -59,10 +59,6 @@ typedef struct
 /* type du message delivre par un capteur. */
 typedef int MESSAGE;
 
-/* Structure de donnees des messages stockes par chaque device en attendant un 
- * iosRead.
- */
-
 typedef struct
 {
 	char      adresseCapteur;
@@ -70,6 +66,9 @@ typedef struct
 	
 } PIC_MESSAGE_BRUTE;
 
+/* Structure de donnees des messages stockes par chaque device en attendant un 
+ * iosRead.
+ */
 typedef struct
 {
 	int        numMessage;
