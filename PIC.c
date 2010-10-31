@@ -40,7 +40,7 @@ static MSG_Q_ID   idBalDrv;
 static int        idTacheScrutation;
 
 /* Adresse du buffer de la carte reseau */
-static char * msg_buff = NULL;
+static char * msgBuff = NULL;
 
 /* === PROTOTYPES DES FONCTIONS LOCALES === */
 
@@ -172,7 +172,8 @@ int PIC_DevAdd
 	
 	if ( nombreDevices >= PIC_N_CAPTEURS_MAX )
 	{
-		errnoSet( ETOOMANYDEV );
+		errnoSet( PIC_E_TOOMANYDEV );
+
 		return -1;
 	}
 
@@ -181,7 +182,8 @@ int PIC_DevAdd
 	desc->specific.adresseCapteur = adresseCapteur;
 	desc->specific.numero_driver  = nombreDevices++;
 	
-	desc->specific.idBAL = msgQCreate( PIC_N_MESSAGES_MAX, sizeof( PIC_MESSAGE_CAPTEUR ), MSG_Q_FIFO );
+	desc->specific.idBAL = msgQCreate( PIC_N_MESSAGES_MAX, 
+			sizeof( PIC_MESSAGE_CAPTEUR ), MSG_Q_FIFO );
 
 	if ( desc->specific.idBAL == NULL )
 	{
@@ -291,20 +293,11 @@ int PIC_HandlerIT
 	void
 )
 {
-	char * msg;
-
 	sysIntDisable( NIVEAU_IT );
-
-	msg = malloc( PIC_TAILLE_MSG_BRUTE );
-
-	memcpy( msg, msg_buff, PIC_TAILLE_MSG_BRUTE );
-
-	msgQSend( idBalDrv, msg, PIC_TAILLE_MSG_BRUTE, NO_WAIT, MSG_PRI_NORMAL );
-
+	
+	msgQSend( idBalDrv, ( char * )msgBuf, PIC_TAILLE_MSG_BRUTE, NO_WAIT, MSG_PRI_NORMAL );
+	
 	sysIntEnable( NIVEAU_IT );
-	
-	free( msg );
-	
 }
 
 /******************************************************************************/
@@ -335,7 +328,5 @@ void PIC_DrvConclude
 	
 	msgQDelete( idBalDrv );
 	
-	/* Deconnecter le handler d'it
-	 * Tuer TacheScrutation 
-	 */
+	/* Deconnecter le handler d'it */
 }	
