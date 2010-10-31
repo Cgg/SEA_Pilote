@@ -145,6 +145,8 @@ PIC_CR_REMOVE PIC_DrvRemove
 		{		
 			numDriver = -1;
 			
+			PIC_DrvConclude();
+			
 			retour = remove_ok;
 		}
 		else
