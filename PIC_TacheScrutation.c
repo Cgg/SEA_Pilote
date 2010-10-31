@@ -28,7 +28,7 @@ static int compteurMessage = 0;
 /******************************************************************************/
 int PIC_TacheScrutation
 (
-	MSG_Q_ID const idBalDrv
+	int const idBalDrvInt
 )
 {
 	/* Algo :
@@ -44,6 +44,8 @@ int PIC_TacheScrutation
 	PIC_MESSAGE_CAPTEUR   messageTraite;
 	
 	PIC_HEADER * destinataire;
+	
+	MSG_Q_ID idBalDrv = ( MSG_Q_ID ) idBalDrvInt;
 	
 	for( ;; )
 	{

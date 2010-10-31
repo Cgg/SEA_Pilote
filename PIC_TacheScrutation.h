@@ -19,7 +19,8 @@
 
 /* === DEFINITION DE CONSTANTES === */
 
-#define PRIORITE_SCRUTATION            ( 1 )
+#define PIC_PRIORITE_SCRUTATION        ( 1 )
+#define PIC_STACK_SCRUTATION           ( 20000 )
 
 
 /* === PROTOTYPES DES FONCTIONS EXPOSEES === */
@@ -27,7 +28,7 @@
 /******************************************************************************/
 int PIC_TacheScrutation
 (
-	MSG_Q_ID const idBalDrv
+	int const idBalDrvInt
 );
 
 #endif
