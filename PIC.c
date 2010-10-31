@@ -11,12 +11,14 @@
 
 /* inclusions systeme */
 #include "stdlib.h"
+#include "taskLib.h"
 #include "timers.h"
 #include "sysLib.h"
 #include "string.h"
 
 /* inclusions projet */
 #include "PIC.h"
+#include "PIC_TacheScrutation.h"
 #include "PIC_ListeCapteurs.h"
 
 /* === DEFINITIONS DE CONSTANTES === */
@@ -318,8 +320,11 @@ void PIC_DrvInit
 {
 	idBalDrv = msgQCreate( PIC_N_MESSAGES_MAX, PIC_TAILLE_MSG_BRUTE, MSG_Q_FIFO );
 	
+	idTacheScrutation = taskSpawn( "PIC_TacheScrutation", 
+			PIC_PRIORITE_SCRUTATION, 0, PIC_STACK_SCRUTATION, 
+			( FUNCPTR )PIC_TacheScrutation, ( int ) idBalDrv, 0, 0, 0, 0, 0, 0, 0, 0, 0 );
+	
 	/* TODO : 
-	 * - Lancer la tâche de scrutation
 	 * - Initialiser le handler d'it
 	 * - Initialiser le temps
 	 */
@@ -332,5 +337,10 @@ void PIC_DrvConclude
 )
 {
 	msgQDelete( idBalDrv );
-}
-		
+	
+	/* Deconnecter le handler d'it
+	 * Tuer TacheScrutation 
+	 */
+	
+	taskDelete( idTacheScrutation );
+}	
