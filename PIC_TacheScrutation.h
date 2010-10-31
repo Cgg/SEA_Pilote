@@ -22,6 +22,8 @@
 #define PIC_PRIORITE_SCRUTATION        ( 1 )
 #define PIC_STACK_SCRUTATION           ( 20000 )
 
+#define PIC_PRIORITE_SIMULATION        ( 20 )
+#define PIC_STACK_SIMULATION           ( 2000 )
 
 /* === PROTOTYPES DES FONCTIONS EXPOSEES === */
 

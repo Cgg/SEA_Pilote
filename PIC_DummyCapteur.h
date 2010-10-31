@@ -3,11 +3,17 @@
 
 /* === INCLUDES === */
 #include "msgQLib.h"
-#include "../PIC/PIC.h"
+#include "PIC.h"
 
 /* === DEFINITION DE CONSTANTES === */
 
 /* === PROTOTYPES DES FONCTIONS EXPOSEES === */
+
+
+int PIC_DummyCapteur
+( 
+		int balDrvInt 
+);
 
 /******************************************************************************/
 #endif

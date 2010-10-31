@@ -14,6 +14,7 @@
 #include "PIC.h"
 #include "PIC_TacheScrutation.h"
 #include "PIC_ListeCapteurs.h"
+#include "PIC_DummyCapteur.h"
 
 /* === DEFINITIONS DE CONSTANTES === */
 
@@ -32,6 +33,7 @@ static int nombreDevices = 0;
 
 static MSG_Q_ID   idBalDrv;
 static int        idTacheScrutation;
+static int 		  idTacheSimulation;
 
 /* Adresse du buffer de la carte reseau */
 static char * msgBuff = NULL;
@@ -299,6 +301,23 @@ int PIC_IoCtl
 	int          arg
 )
 {
+	switch (fonction) {
+		case 1:
+			if ( idTacheSimulation == NULL )
+				idTacheSimulation = taskSpawn( "PIC_TacheSimulation", 
+						PIC_PRIORITE_SIMULATION, 0, PIC_STACK_SIMULATION, 
+						( FUNCPTR )PIC_DummyCapteur, ( int ) idBalDrv, 0, 0, 0, 0, 0, 0, 0, 0, 0 );
+			break;
+		case 2:
+			if ( idTacheSimulation != NULL )
+				{
+					taskDelete( idTacheSimulation );
+					idTacheSimulation = NULL;
+				}
+			break;
+		default:
+			break;
+	}
 	return 0;
 }
 
@@ -349,6 +368,9 @@ void PIC_DrvConclude
 )
 {
 	taskDelete( idTacheScrutation );
+	
+	if ( idTacheSimulation != NULL )
+		taskDelete( idTacheSimulation ); 
 	
 	msgQDelete( idBalDrv );
 }	

@@ -13,26 +13,32 @@
 #include "PIC_DummyCapteur.h"
 /* === IMPLEMENTATION === */
 
+#define RAND_MAX 255 
+
 /******************************************************************************/
-int main(int argc, char** argv)
+int PIC_DummyCapteur
+( 
+		int balDrvInt 
+)
 {
-	MSG_Q_ID bal = (MSG_Q_ID) atoi( argv[ 1 ] );
+	MSG_Q_ID balDrv = ( MSG_Q_ID ) balDrvInt;
 	
 	PIC_MESSAGE_BRUTE msg;
 
-	msg.adresseCapteur = atoi( argv[ 2 ] );
 	
-	printf( "Capteur %c\n" ,msg.adresseCapteur );
+	//printf( "Capteur %c\n" ,msg.adresseCapteur );
 	
 	for(;;)
 	{
-		msg.message = rand();
+		msg.adresseCapteur = rand(); 
 		
-		msgQSend( bal, (char*)&msg, PIC_TAILLE_MSG_BRUTE, NO_WAIT, MSG_PRI_NORMAL );
+		msg.message = rand() * 500;
 		
-		printf( "\tValeur capteur envoyee: %d", msg.message );
+		msgQSend( balDrv, (char*)&msg, PIC_TAILLE_MSG_BRUTE, NO_WAIT, MSG_PRI_NORMAL );
 		
-		sleep ( rand( ) );
+		//printf( "\tValeur capteur envoyee: %d", msg.message );
+		
+		sleep ( rand( ) / 100 );
 	}
 	
 	return 0;
