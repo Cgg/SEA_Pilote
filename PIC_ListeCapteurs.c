@@ -50,6 +50,8 @@ int AjouterCapteur
 		nouvelleEntree->entreePrecedente = finDeListe;
 		nouvelleEntree->entreeSuivante   = NULL;
 		
+		finDeListe->entreeSuivante = nouvelleEntree;
+		
 		finDeListe = nouvelleEntree;
 		
 		retour = 0;
@@ -71,8 +73,35 @@ int RetirerCapteur
 		return -1;
 	}
 	
-	entree->entreePrecedente->entreeSuivante = entree->entreeSuivante;
-	entree->entreeSuivante->entreePrecedente = entree->entreePrecedente;
+	if ( entree == teteDeListe && entree == finDeListe )
+	{
+		teteDeListe = NULL;
+		finDeListe  = NULL;
+	}
+	else
+	{
+		if( entree == teteDeListe )
+		{
+			entree->entreeSuivante->entreePrecedente = NULL;
+			
+			teteDeListe = entree->entreeSuivante;
+		}
+		else
+		{
+			entree->entreeSuivante->entreePrecedente = entree->entreePrecedente;
+		}
+		
+		if ( entree == finDeListe )
+		{
+			entree->entreePrecedente->entreeSuivante = NULL;
+			
+			finDeListe = entree->entreePrecedente;
+		}
+		else
+		{
+			entree->entreePrecedente->entreeSuivante = entree->entreeSuivante;
+		}
+	}	
 	
 	free( entree );
 	
@@ -97,13 +126,15 @@ void AfficherCapteurs
 )
 {
 	ENTREE * presente = teteDeListe;
-	
+
 	while( presente != NULL )
 	{
 		printf( "%c\n",presente->capteur->specific.adresseCapteur );
 		
 		presente = presente->entreeSuivante;
 	}
+
+	printf( "Rien a afficher.\n" );
 }
 
 /******************************************************************************/

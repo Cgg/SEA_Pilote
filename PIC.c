@@ -1,19 +1,13 @@
-/* Implementation du Pilote de Capteur
- */
-
-/* TODO :
- * Definir joliment le type booleen (avec des macros et tout et tout)
- * eventuellement
- * un jour peut-être
- */
+/* Implementation du Pilote de Capteur */
 
 /* === INCLUSIONS === */
 
 /* inclusions systeme */
 #include "stdlib.h"
 #include "taskLib.h"
-#include "timers.h"
 #include "sysLib.h"
+#include "intLib.h"
+#include "errnoLib.h"
 #include "string.h"
 
 /* inclusions projet */
@@ -23,8 +17,9 @@
 
 /* === DEFINITIONS DE CONSTANTES === */
 
-#define PIC_N_CAPTEURS_MAX             ( 255 )
+#define PIC_N_CAPTEURS_MAX             ( 15 )
 #define NIVEAU_IT					   ( 42 )
+#define PIC_VECTEUR_IT                 ( 0x666 )
 
 
 /* === DECLARATIONS DE TYPES DE DONNEES === */
@@ -39,7 +34,10 @@ static MSG_Q_ID   idBalDrv;
 static int        idTacheScrutation;
 
 /* Adresse du buffer de la carte reseau */
-static char * msg_buff = NULL;
+static char * msgBuff = NULL;
+
+/* Tableau de pointeurs sur les capteurs ajoutes */
+
 
 /* === PROTOTYPES DES FONCTIONS LOCALES === */
 
@@ -48,30 +46,31 @@ static char * msg_buff = NULL;
 /******************************************************************************/
 int PIC_Open
 (
-	char * const name,
-	int    const flag
+	PIC_HEADER * desc,
+	char       * remainder,
+	int          mode
 );
 
 /******************************************************************************/
 int PIC_Close
 (
-	char * const name
+	PIC_HEADER * desc
 );
 
 /******************************************************************************/
 int PIC_Read
 (
-	int      fd,      /* descripteur de fichier que l'on veut lire */
-	char   * buffer,  /* pointeur vers le buffer de stockage des données lues */
-	size_t   maxbytes /* taille max. à lire */
+	PIC_HEADER * dev,      /* device from which to read */
+	char       * buffer,   /* pointer to buffer to receive bytes */
+	size_t       maxbytes  /* max no. of bytes to read into buffer */
 );
 
 /******************************************************************************/
 int PIC_IoCtl
 (
-	int const fileDescriptor, 
-	int const functionToCall,
-	int const arguments
+	PIC_HEADER * desc,
+	int          fonction,
+	int          arg
 );
 
 /* Handler d'interruptions envoyees par la carte des capteurs */
@@ -96,10 +95,11 @@ void PIC_DrvConclude
 	void
 );
 
+
 /* === IMPLEMENTATION === */
 
 /******************************************************************************/
-PIC_CR_INSTALL PIC_DrvInstall
+int PIC_DrvInstall
 (
 	void
 )
@@ -108,10 +108,10 @@ PIC_CR_INSTALL PIC_DrvInstall
 	
 	if ( numDriver == -1 )
 	{
-		numDriver = iosDrvInstall( &PIC_Open,
+		numDriver = iosDrvInstall( 0,
+								   0,
+								   &PIC_Open,
 								   &PIC_Close,
-								   0,
-								   0,
 								   &PIC_Read,
 								   0,
 								   &PIC_IoCtl );
@@ -128,7 +128,7 @@ PIC_CR_INSTALL PIC_DrvInstall
 }
 
 /******************************************************************************/
-PIC_CR_REMOVE PIC_DrvRemove
+int PIC_DrvRemove
 (
 	void
 )
@@ -151,15 +151,15 @@ PIC_CR_REMOVE PIC_DrvRemove
 }
 
 /******************************************************************************/
-PIC_CR_ADD PIC_DevAdd
+int PIC_DevAdd
 (
 	char * const name,
-	int    const adresseCapteur
+	char   const adresseCapteur
 )
 {
 	PIC_HEADER * desc;
 	
-	if ( numDriver != -1 )
+	if ( numDriver == -1 )
 	{
 		return -1;
 	}
@@ -171,15 +171,18 @@ PIC_CR_ADD PIC_DevAdd
 	
 	if ( nombreDevices >= PIC_N_CAPTEURS_MAX )
 	{
-		errnoSet( PICETOOMANYDEV );
+		errnoSet( PIC_E_TOOMANYDEV );
+
 		return -1;
 	}
 
 	desc = ( PIC_HEADER * ) malloc( sizeof( PIC_HEADER ) );
 	
-	desc->specific.numero_driver = nombreDevices++;
+	desc->specific.adresseCapteur = adresseCapteur;
+	desc->specific.numero_driver  = nombreDevices++;
 	
-	desc->specific.idBAL = msgQCreate( PIC_N_MESSAGES_MAX, sizeof( PIC_MESSAGE_CAPTEUR ), MSG_Q_FIFO );
+	desc->specific.idBAL = msgQCreate( PIC_N_MESSAGES_MAX, 
+			sizeof( PIC_MESSAGE_CAPTEUR ), MSG_Q_FIFO );
 
 	if ( desc->specific.idBAL == NULL )
 	{
@@ -198,7 +201,6 @@ PIC_CR_ADD PIC_DevAdd
 		
 		free( desc );
 		
-		/* errno deja positione */
 		return -1;
 	}
 	
@@ -224,18 +226,18 @@ int PIC_DevDelete
 	
 	if ( ( pDevHdr!= NULL )  && ( suite[0] == '\0' ) )
 	{
+		nombreDevices--;
+		
 		msgQDelete( ( ( PIC_HEADER * )pDevHdr )->specific.idBAL );
 		
 		RetirerCapteur( ( ( PIC_HEADER * )pDevHdr )->specific.adresseCapteur );
 		
 		iosDevDelete( pDevHdr );
 		
-		free( pDevHdr );
-		
 		retour = 0;
 	}
 	
-	free ( suite );
+	free( suite );
 	
 	return retour;
 }
@@ -243,45 +245,63 @@ int PIC_DevDelete
 /******************************************************************************/
 int PIC_Open
 (
-	char * const name,
-	int    const flag
+	PIC_HEADER * desc,
+	char       * remainder,
+	int          mode
 )
 {
-	/* TODO : Ici allouer eventuellement des trucs */
-	return 0;
+	if ( *remainder != '\0' )
+	{
+		return ERROR;
+	}
+	else
+	{
+		return ( ( int ) desc ) ;
+	}
 }
+
 
 /******************************************************************************/
 int PIC_Close
 (
-	char * const name
+	PIC_HEADER * desc
 )
 {
-	/* TODO : Ici desallouer eventuellement des trucs*/
 	return 0;
 }
 
 /******************************************************************************/
 int PIC_Read
 (
-	int      fd,      /* file descriptor from which to read */
-	char   * buffer,  /* pointer to buffer to receive bytes */
-	size_t   maxbytes /* max no. of bytes to read into buffer */
+	PIC_HEADER * dev,      /* device from which to read */
+	char       * buffer,   /* pointer to buffer to receive bytes */
+	size_t       maxbytes  /* max no. of bytes to read into buffer */
 )
 {
+	if ( sizeof( buffer ) != PIC_TAILLE_MSG_TRAITE || 
+		 maxbytes != PIC_TAILLE_MSG_TRAITE )
+	{
+		errnoSet( PIC_E_PARAM_INCORRECTS );
+
+		return -1;
+	}
+	
+	msgQReceive( dev->specific.idBAL, buffer, maxbytes, NO_WAIT );
+	
 	return 0;
 }
 
 /******************************************************************************/
 int PIC_IoCtl
 (
-	int const fileDescriptor,
-	int const functionToCall,
-	int const arguments
+	PIC_HEADER * desc,
+	int          fonction,
+	int          arg
 )
 {
 	return 0;
 }
+
 
 /******************************************************************************/
 int PIC_HandlerIT
@@ -289,22 +309,9 @@ int PIC_HandlerIT
 	void
 )
 {
-	char * msg;
-
 	sysIntDisable( NIVEAU_IT );
-
-	msg = malloc( PIC_TAILLE_MSG_BRUTE );
-
-	if ( msg != NULL )
-	{
-		memcpy( msg, msg_buff, PIC_TAILLE_MSG_BRUTE );
 	
-	
-		msgQSend( idBalDrv, msg, PIC_TAILLE_MSG_BRUTE, NO_WAIT, MSG_PRI_NORMAL );
-
-		
-		free( msg );
-	}
+	msgQSend( idBalDrv, ( char * )msgBuff, PIC_TAILLE_MSG_BRUTE, NO_WAIT, MSG_PRI_NORMAL );
 	
 	sysIntEnable( NIVEAU_IT );
 }
@@ -315,16 +322,24 @@ void PIC_DrvInit
 	void
 )
 {
+	TIMESTAMP clockInit;
+	
 	idBalDrv = msgQCreate( PIC_N_MESSAGES_MAX, PIC_TAILLE_MSG_BRUTE, MSG_Q_FIFO );
 	
 	idTacheScrutation = taskSpawn( "PIC_TacheScrutation", 
 			PIC_PRIORITE_SCRUTATION, 0, PIC_STACK_SCRUTATION, 
 			( FUNCPTR )PIC_TacheScrutation, ( int ) idBalDrv, 0, 0, 0, 0, 0, 0, 0, 0, 0 );
 	
+	intConnect( ( VOIDFUNCPTR * )PIC_VECTEUR_IT, ( VOIDFUNCPTR )PIC_HandlerIT, 0 );
+	
 	/* TODO : 
-	 * - Initialiser le handler d'it
 	 * - Initialiser le temps
 	 */
+	
+	clockInit.tv_sec  = 0;
+	clockInit.tv_nsec = 0;
+	
+	clock_settime( CLOCK_REALTIME, &clockInit );
 }
 
 /******************************************************************************/
@@ -333,11 +348,7 @@ void PIC_DrvConclude
 	void
 )
 {
-	msgQDelete( idBalDrv );
-	
-	/* Deconnecter le handler d'it
-	 * Tuer TacheScrutation 
-	 */
-	
 	taskDelete( idTacheScrutation );
-}
+	
+	msgQDelete( idBalDrv );
+}	
