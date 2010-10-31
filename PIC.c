@@ -24,7 +24,7 @@
 
 /* === DEFINITIONS DE CONSTANTES === */
 
-#define PIC_N_CAPTEURS_MAX             ( 255 )
+#define PIC_N_CAPTEURS_MAX             ( 15 )
 #define NIVEAU_IT					   ( 42 )
 
 
@@ -109,10 +109,10 @@ int PIC_DrvInstall
 	
 	if ( numDriver == -1 )
 	{
-		numDriver = iosDrvInstall( &PIC_Open,
+		numDriver = iosDrvInstall( 0,
+								   0,
+								   &PIC_Open,
 								   &PIC_Close,
-								   0,
-								   0,
 								   &PIC_Read,
 								   0,
 								   &PIC_IoCtl );
