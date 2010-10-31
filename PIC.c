@@ -171,7 +171,7 @@ PIC_CR_ADD PIC_DevAdd
 	
 	if ( nombreDevices >= PIC_N_CAPTEURS_MAX )
 	{
-		errnoSet(ETOOMANYDEV);
+		errnoSet( PICETOOMANYDEV );
 		return -1;
 	}
 

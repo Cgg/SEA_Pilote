@@ -21,7 +21,7 @@
 #define PIC_TAILLE_MSG_TRAITE          ( sizeof( PIC_MESSAGE_CAPTEUR ) )
 
 #define PIC_N_MESSAGES_MAX             ( 10 )
-#define ETOOMANYDEV					   ( 90 )
+#define PICETOOMANYDEV					   ( 90 )
 
 
 /* === DECLARATIONS DE TYPES DE DONNEES === */
