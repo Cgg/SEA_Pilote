@@ -303,9 +303,6 @@ int PIC_HandlerIT
 	
 	free( msg );
 	
-	/* TODO : 
-	 * - Retirer un message de la file si celle-ci est pleine.
-	 */
 }
 
 /******************************************************************************/
