@@ -21,35 +21,10 @@
 #define PIC_TAILLE_MSG_TRAITE          ( sizeof( PIC_MESSAGE_CAPTEUR ) )
 
 #define PIC_N_MESSAGES_MAX             ( 10 )
+#define ETOOMANYDEV					   ( 90 )
 
 
 /* === DECLARATIONS DE TYPES DE DONNEES === */
-
-/* Définition de codes retours */
-typedef enum 
-{
-	deja_installe,
-	no_room
-	
-} PIC_CR_INSTALL;
-
-typedef enum
-{
-	remove_ok,
-	pas_installe,
-	fichiers_ouverts
-	
-} PIC_CR_REMOVE;
-
-typedef enum
-{
-	driver_pas_installe = -1,
-	adresse_prise       = -2,
-	nom_pris            = -3,
-	n_capteurs_overflow = -4,
-	no_room_add         = -5
-	
-} PIC_CR_ADD;
 
 /* temps */
 typedef struct

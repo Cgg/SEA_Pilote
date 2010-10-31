@@ -104,7 +104,7 @@ PIC_CR_INSTALL PIC_DrvInstall
 	void
 )
 {
-	int retour = deja_installe;
+	int retour = -1;
 	
 	if ( numDriver == -1 )
 	{
@@ -116,11 +116,7 @@ PIC_CR_INSTALL PIC_DrvInstall
 								   0,
 								   &PIC_IoCtl );
 
-		if ( numDriver == ERROR )
-		{
-			retour = no_room;
-		}
-		else
+		if ( numDriver != ERROR )
 		{
 			retour = numDriver;
 			
@@ -137,7 +133,7 @@ PIC_CR_REMOVE PIC_DrvRemove
 	void
 )
 {
-	int retour = pas_installe;
+	int retour = -1;
 	
 	if ( numDriver != -1 )
 	{
@@ -147,11 +143,7 @@ PIC_CR_REMOVE PIC_DrvRemove
 			
 			PIC_DrvConclude();
 			
-			retour = remove_ok;
-		}
-		else
-		{
-			retour = fichiers_ouverts;
+			retour = 0;
 		}
 	}
 	
@@ -169,17 +161,18 @@ PIC_CR_ADD PIC_DevAdd
 	
 	if ( numDriver == -1 )
 	{
-		return driver_pas_installe;
+		return -1;
 	}
 
 	if ( ChercherCapteur( adresseCapteur ) != NULL )
 	{
-		return adresse_prise;
+		return -1;
 	}
 	
 	if ( nombreDevices >= PIC_N_CAPTEURS_MAX )
 	{
-		return n_capteurs_overflow;
+		errnoSet(ETOOMANYDEV);
+		return -1;
 	}
 
 	desc = ( PIC_HEADER * ) malloc( sizeof( PIC_HEADER ) );
@@ -194,7 +187,7 @@ PIC_CR_ADD PIC_DevAdd
 		
 		free( desc );
 		
-		return no_room_add;
+		return -1;
 	}
 	
 	if ( iosDevAdd ( ( DEV_HDR * )desc, name, numDriver) == ERROR )
@@ -205,7 +198,8 @@ PIC_CR_ADD PIC_DevAdd
 		
 		free( desc );
 		
-		return nom_pris;
+		/* errno deja positione */
+		return -1;
 	}
 	
 	AjouterCapteur( desc );
@@ -309,9 +303,6 @@ int PIC_HandlerIT
 	
 	free( msg );
 	
-	/* TODO : 
-	 * - Retirer un message de la file si celle-ci est pleine.
-	 */
 }
 
 /******************************************************************************/
