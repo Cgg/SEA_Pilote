@@ -228,18 +228,18 @@ int PIC_DevDelete
 	
 	if ( ( pDevHdr!= NULL )  && ( suite[0] == '\0' ) )
 	{
+		nombreDevices--;
+		
 		msgQDelete( ( ( PIC_HEADER * )pDevHdr )->specific.idBAL );
 		
 		RetirerCapteur( ( ( PIC_HEADER * )pDevHdr )->specific.adresseCapteur );
 		
 		iosDevDelete( pDevHdr );
 		
-		free( pDevHdr );
-		
 		retour = 0;
 	}
 	
-	free ( suite );
+	free( suite );
 	
 	return retour;
 }
@@ -295,7 +295,7 @@ int PIC_HandlerIT
 {
 	sysIntDisable( NIVEAU_IT );
 	
-	msgQSend( idBalDrv, ( char * )msgBuf, PIC_TAILLE_MSG_BRUTE, NO_WAIT, MSG_PRI_NORMAL );
+	msgQSend( idBalDrv, ( char * )msgBuff, PIC_TAILLE_MSG_BRUTE, NO_WAIT, MSG_PRI_NORMAL );
 	
 	sysIntEnable( NIVEAU_IT );
 }
