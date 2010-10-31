@@ -50,6 +50,8 @@ int AjouterCapteur
 		nouvelleEntree->entreePrecedente = finDeListe;
 		nouvelleEntree->entreeSuivante   = NULL;
 		
+		finDeListe->entreeSuivante = nouvelleEntree;
+		
 		finDeListe = nouvelleEntree;
 		
 		retour = 0;

@@ -14,6 +14,7 @@
 #include "taskLib.h"
 #include "timers.h"
 #include "sysLib.h"
+#include "errnoLib.h"
 #include "string.h"
 
 /* inclusions projet */
@@ -99,7 +100,7 @@ void PIC_DrvConclude
 /* === IMPLEMENTATION === */
 
 /******************************************************************************/
-PIC_CR_INSTALL PIC_DrvInstall
+int PIC_DrvInstall
 (
 	void
 )
@@ -128,7 +129,7 @@ PIC_CR_INSTALL PIC_DrvInstall
 }
 
 /******************************************************************************/
-PIC_CR_REMOVE PIC_DrvRemove
+int PIC_DrvRemove
 (
 	void
 )
@@ -151,10 +152,10 @@ PIC_CR_REMOVE PIC_DrvRemove
 }
 
 /******************************************************************************/
-PIC_CR_ADD PIC_DevAdd
+int PIC_DevAdd
 (
 	char * const name,
-	int    const adresseCapteur
+	char   const adresseCapteur
 )
 {
 	PIC_HEADER * desc;
@@ -171,13 +172,14 @@ PIC_CR_ADD PIC_DevAdd
 	
 	if ( nombreDevices >= PIC_N_CAPTEURS_MAX )
 	{
-		errnoSet(ETOOMANYDEV);
+		errnoSet( ETOOMANYDEV );
 		return -1;
 	}
 
 	desc = ( PIC_HEADER * ) malloc( sizeof( PIC_HEADER ) );
 	
-	desc->specific.numero_driver = nombreDevices++;
+	desc->specific.adresseCapteur = adresseCapteur;
+	desc->specific.numero_driver  = nombreDevices++;
 	
 	desc->specific.idBAL = msgQCreate( PIC_N_MESSAGES_MAX, sizeof( PIC_MESSAGE_CAPTEUR ), MSG_Q_FIFO );
 

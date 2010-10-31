@@ -87,7 +87,7 @@ int PIC_TestInstallation
 		printf( "Installation normale echouee.\n");
 	}
 	
-	if( PIC_DrvInstall() == deja_installe )
+	if( PIC_DrvInstall() == -1 )
 	{
 		printf( "Deuxieme installation echouee.\n" );
 	}
@@ -174,7 +174,7 @@ int PIC_TestAjout
 	
 	PIC_DrvRemove();
 	
-	if( PIC_DevAdd( "essai1", 0 ) == driver_pas_installe )
+	if( PIC_DevAdd( "essai1", 0 ) == -1 )
 	{
 		printf( "Ajout sans driver installe echoue.\n" );
 	}
@@ -188,7 +188,7 @@ int PIC_TestAjout
 	
 	PIC_DevAdd( "essai1", 0 );
 	
-	if ( PIC_DevAdd( "essai2", 0 ) == adresse_prise )
+	if ( PIC_DevAdd( "essai2", 0 ) == -1 )
 	{
 		printf( "Ajout de deux capteurs ayant la meme adresse echoue.\n" );
 	}
@@ -198,7 +198,7 @@ int PIC_TestAjout
 		return -1;
 	}
 	
-	if( PIC_DevAdd( "essai1", 2 ) == nom_pris )
+	if( PIC_DevAdd( "essai1", 2 ) == -1 )
 	{
 		printf( "Ajout de deux capteurs ayant le meme nom echoue.\n" );
 	}

@@ -84,22 +84,22 @@ typedef struct
 /* primitives de configuration du pilote */
 
 /******************************************************************************/
-PIC_CR_INSTALL PIC_DrvInstall
+int PIC_DrvInstall
 (
 	void
 );
 
 /******************************************************************************/
-PIC_CR_REMOVE PIC_DrvRemove
+int PIC_DrvRemove
 (
 	void
 );
 
 /******************************************************************************/
-PIC_CR_ADD PIC_DevAdd
+int PIC_DevAdd
 (
 	char * const name,
-	int    const adresseCapteur
+	char   const adresseCapteur
 );
 
 /******************************************************************************/
