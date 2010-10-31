@@ -5,7 +5,53 @@
 
 /* === PROTOTYPES DES FONCTIONS LOCALES === */
 
+/******************************************************************************/
+int main
+(
+	void
+);
+
 /* Fonctions de test */
+
+/******************************************************************************/
+int PIC_TestInstallation
+(
+	void
+);
+
+/******************************************************************************/
+int PIC_TestDesinstallation
+(
+	void
+);
+
+/******************************************************************************/
+int PIC_TestAjout
+(
+	void
+);
+
+
+/* === IMPLEMENTATION === */
+
+/******************************************************************************/
+int main
+(
+	void
+)
+{
+	if( PIC_TestInstallation() == 0 )
+	{
+		printf( "\nTest Installation reussi !\n\n" );
+	}
+	
+	if( PIC_TestDesinstallation() == 0 )
+	{
+		printf( "\n Test Desinstallation reussi !\n\n");
+	}
+	
+	return 0;
+}
 
 /******************************************************************************/
 int PIC_TestInstallation
@@ -15,18 +61,19 @@ int PIC_TestInstallation
 {
 	int result = -1;
 	
-	printf( "Test d'installation du driver.\n"
+	printf( "======\n"
+			"Test d'installation du driver.\n"
 			" - installation normale\n"
 			" - deuxieme installation devant echouer.\n\n");
 	
-	if( PIC_DrvInstall() == 0 )
+	if( PIC_DrvInstall() != 0 )
 	{
-		printf( "Installation normale reussie.\n" );
-		
 		result = 0;
+		
+		printf( "Installation normale reussie.\n" );
 	}
 	
-	if( PIC_DrvInstall() != 0 )
+	if( PIC_DrvInstall() == deja_installe )
 	{
 		printf( "Deuxieme installation echouee.\n" );
 	}
@@ -48,36 +95,31 @@ int PIC_TestDesinstallation
 {
 	int result = -1;
 	
-	printf( "Test de desinstallation du driver.\n"
+	printf( "======\n"
+			"Test de desinstallation du driver.\n"
 			" - desinstallation avec fichiers ouverts\n"
 			" - desinstallation normale apres installation\n"
 			" - deuxieme desinstallation devant echouer.\n\n");
-}
-
-/******************************************************************************/
-int TestAjout
-(
-	void
-)
-{
 	
-}
-
-void main
-(
-	void
-)
-{
-	PIC_CR_INSTALL   crInstall;
-	PIC_CR_REMOVE    crRemove;
-
-	crInstall = PIC_DrvInstall();
-
-	printf( "Installation du PIC : %d \n", crInstall );
+	PIC_DrvInstall();
 	
-	AfficherCapteurs();
+	/* TODO : Test avec fichiers ouverts. */
 	
-	crRemove = PIC_DrvRemove();
-
-	printf( "desinstallation du PIC : %d \n", crRemove );
+	if( PIC_DrvRemove() == 0 )
+	{
+		result = 0;
+		
+		printf( "Desinstallation normale reussi.\n" );
+	}
+	
+	if( PIC_DrvRemove() != 0 )
+	{
+		printf( "Deuxieme desinstallation echouee.\n" );
+	}
+	else
+	{
+		result = -1;
+	}
+	
+	return result;
 }
