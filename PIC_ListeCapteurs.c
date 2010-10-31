@@ -97,13 +97,15 @@ void AfficherCapteurs
 )
 {
 	ENTREE * presente = teteDeListe;
-	
+
 	while( presente != NULL )
 	{
 		printf( "%c\n",presente->capteur->specific.adresseCapteur );
 		
 		presente = presente->entreeSuivante;
 	}
+
+	printf( "Rien a afficher.\n" );
 }
 
 /******************************************************************************/
