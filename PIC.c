@@ -295,14 +295,18 @@ int PIC_HandlerIT
 
 	msg = malloc( PIC_TAILLE_MSG_BRUTE );
 
-	memcpy( msg, msg_buff, PIC_TAILLE_MSG_BRUTE );
+	if ( msg != NULL )
+	{
+		memcpy( msg, msg_buff, PIC_TAILLE_MSG_BRUTE );
+	
+	
+		msgQSend( idBalDrv, msg, PIC_TAILLE_MSG_BRUTE, NO_WAIT, MSG_PRI_NORMAL );
 
-	msgQSend( idBalDrv, msg, PIC_TAILLE_MSG_BRUTE, NO_WAIT, MSG_PRI_NORMAL );
-
+		
+		free( msg );
+	}
+	
 	sysIntEnable( NIVEAU_IT );
-	
-	free( msg );
-	
 }
 
 /******************************************************************************/
