@@ -340,4 +340,4 @@ void PIC_DrvConclude
 	 */
 	
 	taskDelete( idTacheScrutation );
-}	
+}

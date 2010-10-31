@@ -1,10 +1,8 @@
 % Rapport intermédiaire
 
 % TOADD:
-% quand un périphérique est ouvert, la numérotation de ses messages
-% est remise à 0.
-% quand le driver est installé, le temps est remis à 0.
-% numérotation locale au capteur, horloge globale.
+% quand le driver est installé, le temps et la numérotation sont remis à 0.
+% numérotation unique pour tous les capteurs, horloge globale.
 % dans DEvadd: le nom et l'adresse doivent être uniques
 \textsl{
 Note:\\
@@ -21,12 +19,16 @@ On adopte le préfixe PIC (pour PIlote de Capteur).
  met en place les éléments communs à tous les périphériques :
 Handler d'Interruption associé à l'arrivée de nouveaux messages, HandlerCarte
 Buffer contenant le dernier message arrivé, BufferCarte.
+Le temps est réinitialisé, ainsi que la numérotation des messages.
+
  \item [PIC\_DrvRemove] \hfill\\
 libère les éléments mis en place par la fonction DrvInstall.
 
  \item [PIC\_DevAdd] \hfill\\
  prend comme paramètres le nom du capteur et son identifiant associé (le choix de ces deux paramètres est laissé à l'utilisateur). Elle vérifie que aucun autre capteur n'utilise le même identifiant et/ou le même nom et ajoute le capteur si ces conditions sont vérifiées.
 Le périphérique n'est ajouté que si le nombre de capteur utilisé après ajout est inférieur ou égal à 15. La fonction met également à jour le nombre de périphériques ajoutés.
+
+Le nom et l'adresse des capteurs doivent être uniques.
 
  \item [PIC\_DevDelete] \hfill\\
 supprime le périphérique demandé si il existe et décrémente le nombre de périphériques utilisés.
