@@ -167,7 +167,7 @@ PIC_CR_ADD PIC_DevAdd
 {
 	PIC_HEADER * desc;
 	
-	if ( numDriver != -1 )
+	if ( numDriver == -1 )
 	{
 		return driver_pas_installe;
 	}
@@ -338,11 +338,11 @@ void PIC_DrvConclude
 	void
 )
 {
+	taskDelete( idTacheScrutation );
+	
 	msgQDelete( idBalDrv );
 	
 	/* Deconnecter le handler d'it
 	 * Tuer TacheScrutation 
 	 */
-	
-	taskDelete( idTacheScrutation );
 }	

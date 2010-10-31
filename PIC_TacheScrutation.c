@@ -49,22 +49,23 @@ int PIC_TacheScrutation
 	
 	for( ;; )
 	{
-		msgQReceive( idBalDrv, ( char * )&messageRecu, PIC_TAILLE_MSG_BRUTE, WAIT_FOREVER );
-		
-		messageTraite.message    = messageRecu.message;
-		//messageTraite.tArrivee =
-		messageTraite.numMessage = ++compteurMessage;
-		
-		destinataire = ChercherCapteur( messageRecu.adresseCapteur );
-
-		if( destinataire != NULL )
+		if( msgQReceive( idBalDrv, ( char * )&messageRecu, PIC_TAILLE_MSG_BRUTE, 2 ) != -1 )
 		{
-			if ( msgQNumMsgs( destinataire->specific.idBAL ) == PIC_N_MESSAGES_MAX )
-			{
-				msgQReceive( destinataire->specific.idBAL, NULL, 0, NO_WAIT );
-			}
+			messageTraite.message    = messageRecu.message;
+			//messageTraite.tArrivee =
+			messageTraite.numMessage = ++compteurMessage;
 			
-			msgQSend( destinataire->specific.idBAL, ( char * )&messageTraite, PIC_TAILLE_MSG_TRAITE, NO_WAIT, MSG_PRI_NORMAL );
+			destinataire = ChercherCapteur( messageRecu.adresseCapteur );
+	
+			if( destinataire != NULL )
+			{
+				if ( msgQNumMsgs( destinataire->specific.idBAL ) == PIC_N_MESSAGES_MAX )
+				{
+					msgQReceive( destinataire->specific.idBAL, NULL, 0, NO_WAIT );
+				}
+				
+				msgQSend( destinataire->specific.idBAL, ( char * )&messageTraite, PIC_TAILLE_MSG_TRAITE, NO_WAIT, MSG_PRI_NORMAL );
+			}
 		}
 	}
 }
