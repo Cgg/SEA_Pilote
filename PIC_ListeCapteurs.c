@@ -1,5 +1,6 @@
 #include "PIC_ListeCapteurs.h"
 #include "stdlib.h"
+#include "stdioLib.h"
 
 #define T_ENTREE                       ( sizeof( ENTREE ) )
 
@@ -87,6 +88,22 @@ PIC_HEADER * ChercherCapteur
 	ENTREE * entree = ChercherEntree( adresseCapteur );
 	
 	return ( entree != NULL ? entree->capteur : NULL );
+}
+
+/******************************************************************************/
+void AfficherCapteurs
+(
+	void
+)
+{
+	ENTREE * presente = teteDeListe;
+	
+	while( presente != NULL )
+	{
+		printf( "%c\n",presente->capteur->specific.adresseCapteur );
+		
+		presente = presente->entreeSuivante;
+	}
 }
 
 /******************************************************************************/

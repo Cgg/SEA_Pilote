@@ -13,6 +13,12 @@ int RetirerCapteur
 );
 
 /******************************************************************************/
+void AfficherCapteurs
+(
+	void
+);
+
+/******************************************************************************/
 PIC_HEADER * ChercherCapteur
 (
 	char const adresseCapteur
