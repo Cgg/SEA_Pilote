@@ -42,6 +42,9 @@ static int        idTacheScrutation;
 /* Adresse du buffer de la carte reseau */
 static char * msgBuff = NULL;
 
+/* Tableau de pointeurs sur les capteurs ajoutes */
+
+
 /* === PROTOTYPES DES FONCTIONS LOCALES === */
 
 /* prototypes des primitives d'utilisation du PIC */
@@ -49,30 +52,31 @@ static char * msgBuff = NULL;
 /******************************************************************************/
 int PIC_Open
 (
-	char * const name,
-	int    const flag
+		PIC_HEADER * desc,
+		char       * remainder,
+		int          mode
 );
 
 /******************************************************************************/
 int PIC_Close
 (
-	char * const name
+	PIC_HEADER * desc
 );
 
 /******************************************************************************/
 int PIC_Read
 (
-	int      fd,      /* descripteur de fichier que l'on veut lire */
-	char   * buffer,  /* pointeur vers le buffer de stockage des données lues */
-	size_t   maxbytes /* taille max. à lire */
+	PIC_HEADER * dev,      /* device from which to read */
+	char       * buffer,   /* pointer to buffer to receive bytes */
+	size_t       maxbytes  /* max no. of bytes to read into buffer */
 );
 
 /******************************************************************************/
 int PIC_IoCtl
 (
-	int const fileDescriptor, 
-	int const functionToCall,
-	int const arguments
+	PIC_HEADER * desc,
+	int          fonction,
+	int          arg
 );
 
 /* Handler d'interruptions envoyees par la carte des capteurs */
@@ -247,45 +251,63 @@ int PIC_DevDelete
 /******************************************************************************/
 int PIC_Open
 (
-	char * const name,
-	int    const flag
+	PIC_HEADER * desc,
+	char       * remainder,
+	int          mode
 )
 {
-	/* TODO : Ici allouer eventuellement des trucs */
-	return 0;
+	if ( *remainder != '\0' )
+	{
+		return ERROR;
+	}
+	else
+	{
+		return ( ( int ) desc ) ;
+	}
 }
+
 
 /******************************************************************************/
 int PIC_Close
 (
-	char * const name
+	PIC_HEADER * desc
 )
 {
-	/* TODO : Ici desallouer eventuellement des trucs*/
 	return 0;
 }
 
 /******************************************************************************/
 int PIC_Read
 (
-	int      fd,      /* file descriptor from which to read */
-	char   * buffer,  /* pointer to buffer to receive bytes */
-	size_t   maxbytes /* max no. of bytes to read into buffer */
+	PIC_HEADER * dev,      /* device from which to read */
+	char       * buffer,   /* pointer to buffer to receive bytes */
+	size_t       maxbytes  /* max no. of bytes to read into buffer */
 )
 {
+	if ( sizeof( buffer ) != PIC_TAILLE_MSG_TRAITE || 
+		 maxbytes != PIC_TAILLE_MSG_TRAITE )
+	{
+		errnoSet( PIC_E_PARAM_INCORRECTS );
+
+		return -1;
+	}
+	
+	msgQReceive( dev->specific.idBAL, buffer, maxbytes, NO_WAIT );
+	
 	return 0;
 }
 
 /******************************************************************************/
 int PIC_IoCtl
 (
-	int const fileDescriptor,
-	int const functionToCall,
-	int const arguments
+	PIC_HEADER * desc,
+	int          fonction,
+	int          arg
 )
 {
 	return 0;
 }
+
 
 /******************************************************************************/
 int PIC_HandlerIT
