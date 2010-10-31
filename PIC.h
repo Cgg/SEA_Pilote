@@ -13,6 +13,7 @@
 /* inclusions systeme */
 #include "iosLib.h"
 #include "msgQLib.h"
+#include "timers.h"
 
 
  /* === DECLARATION DE CONSTANTES */
@@ -29,12 +30,7 @@
 /* === DECLARATIONS DE TYPES DE DONNEES === */
 
 /* temps */
-typedef struct
-{
-    time_t      tv_sec;         /* seconds */
-    long        tv_nsec;        /* nanoseconds (0 -1,000,000,000) */
-
-} timespec;
+typedef struct timespec TIMESTAMP;
 
 /* type du message delivre par un capteur. */
 typedef int MESSAGE;
@@ -51,9 +47,9 @@ typedef struct
  */
 typedef struct
 {
-	int        numMessage;
-	timespec   tArrivee;
-	MESSAGE    message;
+	int         numMessage;
+	TIMESTAMP   tArrivee;
+	MESSAGE     message;
 
 } PIC_MESSAGE_CAPTEUR;
 

@@ -37,7 +37,7 @@ int PIC_TacheScrutation
 	 * - recherche du capteur correspondant
 	 * - si capteur trouve, depot du message dans la bal du capteur (retrait 
 	 * d'un message si bal pleine)
-	 * - goto le debut :D
+	 * - goto le debut
 	 */
 	
 	PIC_MESSAGE_BRUTE     messageRecu;	
@@ -47,12 +47,16 @@ int PIC_TacheScrutation
 	
 	MSG_Q_ID idBalDrv = ( MSG_Q_ID ) idBalDrvInt;
 	
+	TIMESTAMP tempsArrivee;
+	
 	for( ;; )
 	{
 		if( msgQReceive( idBalDrv, ( char * )&messageRecu, PIC_TAILLE_MSG_BRUTE, 2 ) != -1 )
 		{
+			clock_gettime( CLOCK_REALTIME, &tempsArrivee );
+			
 			messageTraite.message    = messageRecu.message;
-			//messageTraite.tArrivee =
+			messageTraite.tArrivee   = tempsArrivee;
 			messageTraite.numMessage = ++compteurMessage;
 			
 			destinataire = ChercherCapteur( messageRecu.adresseCapteur );

@@ -1,19 +1,12 @@
-/* Implementation du Pilote de Capteur
- */
-
-/* TODO :
- * Definir joliment le type booleen (avec des macros et tout et tout)
- * eventuellement
- * un jour peut-être
- */
+/* Implementation du Pilote de Capteur */
 
 /* === INCLUSIONS === */
 
 /* inclusions systeme */
 #include "stdlib.h"
 #include "taskLib.h"
-#include "timers.h"
 #include "sysLib.h"
+#include "intLib.h"
 #include "errnoLib.h"
 #include "string.h"
 
@@ -26,6 +19,7 @@
 
 #define PIC_N_CAPTEURS_MAX             ( 15 )
 #define NIVEAU_IT					   ( 42 )
+#define PIC_VECTEUR_IT                 ( 0x666 )
 
 
 /* === DECLARATIONS DE TYPES DE DONNEES === */
@@ -52,9 +46,9 @@ static char * msgBuff = NULL;
 /******************************************************************************/
 int PIC_Open
 (
-		PIC_HEADER * desc,
-		char       * remainder,
-		int          mode
+	PIC_HEADER * desc,
+	char       * remainder,
+	int          mode
 );
 
 /******************************************************************************/
@@ -100,6 +94,7 @@ void PIC_DrvConclude
 (
 	void
 );
+
 
 /* === IMPLEMENTATION === */
 
@@ -328,16 +323,24 @@ void PIC_DrvInit
 	void
 )
 {
+	TIMESTAMP clockInit;
+	
 	idBalDrv = msgQCreate( PIC_N_MESSAGES_MAX, PIC_TAILLE_MSG_BRUTE, MSG_Q_FIFO );
 	
 	idTacheScrutation = taskSpawn( "PIC_TacheScrutation", 
 			PIC_PRIORITE_SCRUTATION, 0, PIC_STACK_SCRUTATION, 
 			( FUNCPTR )PIC_TacheScrutation, ( int ) idBalDrv, 0, 0, 0, 0, 0, 0, 0, 0, 0 );
 	
+	intConnect( ( VOIDFUNCPTR * )PIC_VECTEUR_IT, ( VOIDFUNCPTR )PIC_HandlerIT, 0 );
+	
 	/* TODO : 
-	 * - Initialiser le handler d'it
 	 * - Initialiser le temps
 	 */
+	
+	clockInit.tv_sec  = 0;
+	clockInit.tv_nsec = 0;
+	
+	clock_settime( CLOCK_REALTIME, &clockInit );
 }
 
 /******************************************************************************/
@@ -349,6 +352,4 @@ void PIC_DrvConclude
 	taskDelete( idTacheScrutation );
 	
 	msgQDelete( idBalDrv );
-	
-	/* Deconnecter le handler d'it */
 }	
