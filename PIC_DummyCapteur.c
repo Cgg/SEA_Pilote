@@ -56,15 +56,16 @@ int PIC_DummyCapteur
 /******************************************************************************/
 int PIC_SimStart
 (
-	char * tabAdressesCapteurs,
-	int const nbCapteur
+	char      * tabAdressesCapteurs,
+	int const   nbCapteur
 )
 {
 	if ( idTacheSimulation == 0 )
 	{
 		idTacheSimulation = taskSpawn( "PIC_TacheSimulation", 
 				PIC_PRIORITE_SIMULATION, 0, PIC_STACK_SIMULATION, 
-				( FUNCPTR )PIC_DummyCapteur, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 );
+				( FUNCPTR )PIC_DummyCapteur, ( int )tabAdressesCapteurs, 
+				nbCapteur, 0, 0, 0, 0, 0, 0, 0, 0 );
 	}
 }
 
