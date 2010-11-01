@@ -5,6 +5,7 @@
 #include "msgQLib.h"
 #include "PIC.h"
 
+
 /* === DEFINITION DE CONSTANTES === */
 
 #define PIC_PRIORITE_SIMULATION        ( 20 )
@@ -13,17 +14,19 @@
 
 /* === PROTOTYPES DES FONCTIONS EXPOSEES === */
 
+/******************************************************************************/
 int PIC_SimStart
 (
-	char * tabAdressesCapteurs,
-	int const nbCapteur
+	char      * tabAdressesCapteurs,
+	int const   nbCapteur
 );
 
+/******************************************************************************/
 int PIC_SimStop
 (
 	void
 );
 
-/******************************************************************************/
+
 #endif
 /* PIC_DUMMY_CAPTEUR */
