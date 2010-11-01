@@ -78,6 +78,6 @@ int PIC_SimStop
 	if ( idTacheSimulation != 0 )
 	{
 		taskDelete( idTacheSimulation );
-		idTacheSimulation = NULL;
+		idTacheSimulation = 0;
 	}
 }
