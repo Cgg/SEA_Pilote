@@ -9,6 +9,7 @@
 #include "intLib.h"
 #include "errnoLib.h"
 #include "string.h"
+#include "stdio.h"
 
 /* inclusions projet */
 #include "PIC.h"
@@ -229,7 +230,7 @@ int PIC_DevDelete
 	char * const name
 )
 {
-	int   i;
+	int   i = 0;
 	int   retour = -1;
 	
 	DEV_HDR * pDevHdr;
@@ -247,7 +248,7 @@ int PIC_DevDelete
 		
 		while( i < PIC_N_CAPTEURS_MAX )
 		{
-			if( tabPointeurs[ i ] != NULL && strcmp( tabPointeurs[ i ]->dev_hdr.name, pDevHdr->name ) == 0 )
+			if( tabPointeurs[ i ] != NULL && tabPointeurs[ i ]->specific.adresseCapteur == ( ( PIC_HEADER * )pDevHdr )->specific.adresseCapteur )
 			{
 				tabPointeurs[ i ] = NULL;
 				

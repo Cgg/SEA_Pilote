@@ -55,6 +55,8 @@ int PIC_TacheScrutation
 	
 	tabPointeurs = ( PIC_HEADER * * )tabPointeursIN;
 	
+	i = 0;
+	
 	for( ;; )
 	{
 		if( msgQReceive( idBalDrv, ( char * )&messageRecu, PIC_TAILLE_MSG_BRUTE, 2 ) != -1 )
