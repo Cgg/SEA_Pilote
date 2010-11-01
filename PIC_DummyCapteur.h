@@ -27,6 +27,5 @@ int PIC_SimStop
 	void
 );
 
-
 #endif
 /* PIC_DUMMY_CAPTEUR */
