@@ -24,17 +24,15 @@ static int idTacheSimulation = 0;
 /******************************************************************************/
 int PIC_DummyCapteur
 ( 
-	int    const balDrvInt,
 	char * 		 tabAdressesCapteurs,
 	int    const nbCapteurs
 )
 {
-	MSG_Q_ID balDrv = ( MSG_Q_ID ) balDrvInt;
+	MSG_Q_ID balDrv = PIC_RecupererBal();
 	
 	PIC_MESSAGE_BRUTE msg;
 
 	int nbCapteursUtilises = PIC_N_CAPTEURS_MAX;
-	//printf( "Capteur %c\n" ,msg.adresseCapteur );
 	
 	if ( nbCapteurs >= PIC_N_CAPTEURS_MAX )
 	{
@@ -66,7 +64,7 @@ int PIC_SimStart
 	{
 		idTacheSimulation = taskSpawn( "PIC_TacheSimulation", 
 				PIC_PRIORITE_SIMULATION, 0, PIC_STACK_SIMULATION, 
-				( FUNCPTR )PIC_DummyCapteur, ( int ) PIC_RecupererBal(), 0, 0, 0, 0, 0, 0, 0, 0, 0 );
+				( FUNCPTR )PIC_DummyCapteur, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 );
 	}
 }
 
