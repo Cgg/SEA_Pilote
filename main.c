@@ -112,13 +112,10 @@ int PIC_TestDesinstallation
 	
 	printf( "======\n"
 			"Test de desinstallation du driver.\n"
-			" - desinstallation avec fichiers ouverts\n"
 			" - desinstallation normale apres installation\n"
 			" - deuxieme desinstallation devant echouer.\n\n");
 	
 	PIC_DrvInstall();
-	
-	/* TODO : Test avec fichiers ouverts. */
 	
 	if( PIC_DrvRemove() == 0 )
 	{
@@ -208,7 +205,7 @@ int PIC_TestAjout
 		return -1;
 	}
  
-	/* TODO : Essayer d'ajouter plus de 255 capteurs */
+	/* TODO : Essayer d'ajouter plus de 15 capteurs */
 	
 	PIC_DevDelete( "essai1" );
 	
@@ -223,5 +220,36 @@ int PIC_TestEnlevement
 	void
 )
 {
+	printf( "======\n"
+			"Test d'enlevements de device.\n"
+			" - enlevement normal\n"
+			" - enlevement d'un device inexistant.\n\n");
 	
+	PIC_DrvInstall();
+	
+	PIC_DevAdd( "a", 42 );
+	
+	if( PIC_DevDelete( "a" ) == 0 )
+	{
+		printf( "Enlevement normal reussi." );
+	}
+	else
+	{
+		printf( "Enlevement normal echoue." );
+		return -1;
+	}
+	
+	if( PIC_DevDelete( "a" ) == 0 )
+	{
+		printf( "Enlevement d'un device inexistant echoue." );
+	}
+	else
+	{
+		printf( "Enlevement d'un device inexistant reussi." );
+		return -1;
+	}
+	
+	PIC_DrvRemove();
+	
+	return 0;
 }
