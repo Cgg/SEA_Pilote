@@ -23,6 +23,8 @@
 
 #define PIC_N_MESSAGES_MAX             ( 10 )
 
+#define PIC_N_CAPTEURS_MAX             ( 15 )
+
 #define PIC_E_TOOMANYDEV			   ( 90 )
 #define PIC_E_PARAM_INCORRECTS         ( 91 )
 
