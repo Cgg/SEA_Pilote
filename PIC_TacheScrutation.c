@@ -67,7 +67,7 @@ int PIC_TacheScrutation
 			
 			while( i < PIC_N_CAPTEURS_MAX )
 			{
-				if( messageRecu.adresseCapteur == tabPointeurs[ i ]->specific.adresseCapteur )
+				if( tabPointeurs[ i ] != NULL && messageRecu.adresseCapteur == tabPointeurs[ i ]->specific.adresseCapteur )
 				{
 					destinataire = tabPointeurs[ i ];
 					

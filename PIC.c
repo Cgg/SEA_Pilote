@@ -162,10 +162,7 @@ int PIC_DevAdd
 	
 	if ( numDriver == -1 )
 	{
-		return -1;if ( ChercherCapteur( adresseCapteur ) != NULL )
-		{
-			return -1;
-		}
+		return -1;
 	}
 
 	
@@ -237,12 +234,12 @@ int PIC_DevDelete
 	
 	DEV_HDR * pDevHdr;
 	
-	char * suite = malloc( sizeof( char ) );
+	char * * suite;
 
 	/* recherche du peripherique a supprimer */
-	pDevHdr = iosDevFind( name, &suite );
+	pDevHdr = iosDevFind( name, suite );
 	
-	if ( ( pDevHdr != NULL )  && ( suite[ 0 ] == '\0' ) )
+	if ( ( pDevHdr != NULL )  && ( *suite[ 0 ] == '\0' ) )
 	{
 		nombreDevices--;
 		
@@ -250,7 +247,7 @@ int PIC_DevDelete
 		
 		while( i < PIC_N_CAPTEURS_MAX )
 		{
-			if( strcmp( tabPointeurs[ i ]->dev_hdr.name, pDevHdr->name ) == 0 )
+			if( tabPointeurs[ i ] != NULL && strcmp( tabPointeurs[ i ]->dev_hdr.name, pDevHdr->name ) == 0 )
 			{
 				tabPointeurs[ i ] = NULL;
 				
@@ -264,9 +261,7 @@ int PIC_DevDelete
 		
 		retour = 0;
 	}
-	
-	free( suite );
-	
+		
 	return retour;
 }
 
@@ -348,9 +343,16 @@ void PIC_DrvInit
 	void
 )
 {
+	int i;
+	
 	TIMESTAMP clockInit;
 	
 	tabPointeurs = malloc( PIC_N_CAPTEURS_MAX * sizeof( PIC_HEADER * ) );
+	
+	for( i = 0 ; i < PIC_N_CAPTEURS_MAX ; i++ )
+	{
+		tabPointeurs[ i ] = NULL;
+	}
 	
 	idBalDrv = msgQCreate( PIC_N_MESSAGES_MAX, PIC_TAILLE_MSG_BRUTE, MSG_Q_FIFO );
 	
