@@ -108,5 +108,11 @@ int PIC_DevDelete
 	char * const name
 );
 
+/******************************************************************************/
+MSG_Q_ID PIC_RecupererBal
+(
+	void
+);
+
 #endif
 /* PIC_H */

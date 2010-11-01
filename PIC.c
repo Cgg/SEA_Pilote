@@ -381,3 +381,12 @@ void PIC_DrvConclude
 	
 	free( tabPointeurs );
 }	
+
+/******************************************************************************/
+MSG_Q_ID PIC_RecupererBal
+(
+	void
+)
+{
+	return idBalDrv;
+}
