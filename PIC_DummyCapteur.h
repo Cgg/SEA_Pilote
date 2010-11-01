@@ -11,9 +11,9 @@
 
 int PIC_DummyCapteur
 ( 
-		int const balDrvInt, 
-		char * tabAdressesCapteurs,
-		int const nbCapteur
+	int const balDrvInt, 
+	char * tabAdressesCapteurs,
+	int const nbCapteur
 );
 
 /******************************************************************************/

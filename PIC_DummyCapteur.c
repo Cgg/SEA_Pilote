@@ -16,9 +16,9 @@
 /******************************************************************************/
 int PIC_DummyCapteur
 ( 
-		int const balDrvInt,
-		char * tabAdressesCapteurs,
-		int const nbCapteurs
+	int    const balDrvInt,
+	char * 		 tabAdressesCapteurs,
+	int    const nbCapteurs
 )
 {
 	MSG_Q_ID balDrv = ( MSG_Q_ID ) balDrvInt;

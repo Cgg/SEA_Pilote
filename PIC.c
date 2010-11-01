@@ -36,7 +36,7 @@ static int        idTacheScrutation;
 static char * msgBuff = NULL;
 
 /* Tableau de pointeurs sur les capteurs ajoutes */
-
+static PIC_HEADER * * tabPointeurs = NULL;
 
 /* === PROTOTYPES DES FONCTIONS LOCALES === */
 
@@ -158,14 +158,24 @@ int PIC_DevAdd
 {
 	PIC_HEADER * desc;
 	
+	int i;
+	
 	if ( numDriver == -1 )
 	{
-		return -1;
+		return -1;if ( ChercherCapteur( adresseCapteur ) != NULL )
+		{
+			return -1;
+		}
 	}
 
-	if ( ChercherCapteur( adresseCapteur ) != NULL )
+	
+	for ( i = 0 ; i < PIC_N_CAPTEURS_MAX ; i++ )
 	{
-		return -1;
+		if ( tabPointeurs[ i ] != NULL && 
+				tabPointeurs[ i ]->specific.adresseCapteur == adresseCapteur )
+		{
+			return -1;
+		}
 	}
 	
 	if ( nombreDevices >= PIC_N_CAPTEURS_MAX )
@@ -203,7 +213,15 @@ int PIC_DevAdd
 		return -1;
 	}
 	
-	AjouterCapteur( desc );
+	for( i = 0 ; i < PIC_N_CAPTEURS_MAX ; i++ )
+	{
+		if( tabPointeurs[ i ] == NULL )
+		{
+			tabPointeurs[ i ] = desc;
+			
+			return nombreDevices;
+		}
+	}
 	
 	return nombreDevices;
 }
@@ -214,7 +232,8 @@ int PIC_DevDelete
 	char * const name
 )
 {
-	int retour = -1;
+	int   i;
+	int   retour = -1;
 	
 	DEV_HDR * pDevHdr;
 	
@@ -223,13 +242,23 @@ int PIC_DevDelete
 	/* recherche du peripherique a supprimer */
 	pDevHdr = iosDevFind( name, &suite );
 	
-	if ( ( pDevHdr!= NULL )  && ( suite[0] == '\0' ) )
+	if ( ( pDevHdr != NULL )  && ( suite[ 0 ] == '\0' ) )
 	{
 		nombreDevices--;
 		
 		msgQDelete( ( ( PIC_HEADER * )pDevHdr )->specific.idBAL );
 		
-		RetirerCapteur( ( ( PIC_HEADER * )pDevHdr )->specific.adresseCapteur );
+		while( i < PIC_N_CAPTEURS_MAX )
+		{
+			if( strcmp( tabPointeurs[ i ]->dev_hdr.name, pDevHdr->name ) == 0 )
+			{
+				tabPointeurs[ i ] = NULL;
+				
+				i = PIC_N_CAPTEURS_MAX;
+			}
+			
+			i++;
+		}
 		
 		iosDevDelete( pDevHdr );
 		
@@ -258,7 +287,6 @@ int PIC_Open
 		return ( ( int ) desc ) ;
 	}
 }
-
 
 /******************************************************************************/
 int PIC_Close
@@ -301,7 +329,6 @@ int PIC_IoCtl
 	return 0;
 }
 
-
 /******************************************************************************/
 int PIC_HandlerIT
 (
@@ -323,6 +350,8 @@ void PIC_DrvInit
 {
 	TIMESTAMP clockInit;
 	
+	tabPointeurs = malloc( PIC_N_CAPTEURS_MAX * sizeof( PIC_HEADER * ) );
+	
 	idBalDrv = msgQCreate( PIC_N_MESSAGES_MAX, PIC_TAILLE_MSG_BRUTE, MSG_Q_FIFO );
 	
 	idTacheScrutation = taskSpawn( "PIC_TacheScrutation", 
@@ -330,10 +359,6 @@ void PIC_DrvInit
 			( FUNCPTR )PIC_TacheScrutation, ( int ) idBalDrv, 0, 0, 0, 0, 0, 0, 0, 0, 0 );
 	
 	intConnect( ( VOIDFUNCPTR * )PIC_VECTEUR_IT, ( VOIDFUNCPTR )PIC_HandlerIT, 0 );
-	
-	/* TODO : 
-	 * - Initialiser le temps
-	 */
 	
 	clockInit.tv_sec  = 0;
 	clockInit.tv_nsec = 0;
@@ -350,4 +375,6 @@ void PIC_DrvConclude
 	taskDelete( idTacheScrutation );
 	
 	msgQDelete( idBalDrv );
+	
+	free( tabPointeurs );
 }	

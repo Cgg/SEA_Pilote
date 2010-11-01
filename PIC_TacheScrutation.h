@@ -30,7 +30,8 @@
 /******************************************************************************/
 int PIC_TacheScrutation
 (
-	int const idBalDrvInt
+	int const idBalDrvInt,
+	int const tabPointeursIN
 );
 
 #endif

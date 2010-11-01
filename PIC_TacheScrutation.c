@@ -28,7 +28,8 @@ static int compteurMessage = 0;
 /******************************************************************************/
 int PIC_TacheScrutation
 (
-	int const idBalDrvInt
+	int const idBalDrvInt,
+	int const tabPointeursIN
 )
 {
 	/* Algo :
@@ -40,14 +41,19 @@ int PIC_TacheScrutation
 	 * - goto le debut
 	 */
 	
+	int i;
+	
 	PIC_MESSAGE_BRUTE     messageRecu;	
 	PIC_MESSAGE_CAPTEUR   messageTraite;
 	
-	PIC_HEADER * destinataire;
+	PIC_HEADER * * tabPointeurs;
+	PIC_HEADER *   destinataire;
+	
+	TIMESTAMP tempsArrivee;
 	
 	MSG_Q_ID idBalDrv = ( MSG_Q_ID ) idBalDrvInt;
 	
-	TIMESTAMP tempsArrivee;
+	tabPointeurs = ( PIC_HEADER * * )tabPointeursIN;
 	
 	for( ;; )
 	{
@@ -59,7 +65,17 @@ int PIC_TacheScrutation
 			messageTraite.tArrivee   = tempsArrivee;
 			messageTraite.numMessage = ++compteurMessage;
 			
-			destinataire = ChercherCapteur( messageRecu.adresseCapteur );
+			while( i < PIC_N_CAPTEURS_MAX )
+			{
+				if( messageRecu.adresseCapteur == tabPointeurs[ i ]->specific.adresseCapteur )
+				{
+					destinataire = tabPointeurs[ i ];
+					
+					i = PIC_N_CAPTEURS_MAX;
+				}
+				
+				i++;
+			}
 	
 			if( destinataire != NULL )
 			{
