@@ -274,21 +274,26 @@ int q
 	PIC_MESSAGE_CAPTEUR * messageCapteur = 
 			( PIC_MESSAGE_CAPTEUR * )malloc( PIC_TAILLE_MSG_TRAITE );
 	
-	char * tabAdresseCapteurs = ( char * )malloc( 2 * sizeof( char ) );
+	char * tabAdresseCapteurs = malloc( 2 * sizeof( char ) );
 	
 	time.tv_nsec = 0;
 	time.tv_sec  = 1;
 	
 	PIC_DrvInstall();
 	
-	PIC_DevAdd( "a", 15 );
-	PIC_DevAdd( "b", 17 );
+	PIC_DevAdd( "A", 65 );
+	PIC_DevAdd( "B", 66 );
 	
-	fdC1 = open( "a", O_RDONLY, 777 );
-	fdC2 = open( "b", O_RDONLY, 777 );
+	fdC1 = open( "A", O_RDONLY, 777 );
+	fdC2 = open( "B", O_RDONLY, 777 );
 	
-	tabAdresseCapteurs[ 0 ] = 15;
-	tabAdresseCapteurs[ 1 ] = 17;
+	tabAdresseCapteurs[ 0 ] = 65;
+	tabAdresseCapteurs[ 1 ] = 66;
+	
+	for( i = 2 ; i < PIC_N_CAPTEURS_MAX ; i++ )
+	{
+		tabAdresseCapteurs[ i ] = 0;
+	}
 	
 	PIC_SimStart( tabAdresseCapteurs, 2 );
 	
@@ -301,21 +306,21 @@ int q
 		
 		printf( "message : %d.\n", ( int )( messageCapteur->message ) );
 		
-		printf( "%d bytes lus du capteur 15.\n", read( fdC2,
+		printf( "%d bytes lus du capteur 17.\n", read( fdC2,
 				( char * )messageCapteur, PIC_TAILLE_MSG_TRAITE ) );
 		
 		printf( "message : %d.\n", ( int )( messageCapteur->message ) );
 		
 		nanosleep( &time, NULL );
-	}
-	
+	}	
+
 	close( fdC1 );
 	close( fdC2 );
 	
 	PIC_SimStop();
 	
-	PIC_DevDelete( "a" );
-	PIC_DevDelete( "b" );
+	PIC_DevDelete( "A" );
+	PIC_DevDelete( "B" );
 	
 	PIC_DrvRemove();
 	return 0;

@@ -5,6 +5,7 @@
 
 /* system includes */
 #include "stdlib.h"
+#include "stdio.h"
 
 /* project includes */
 #include "PIC_TacheScrutation.h"
@@ -54,6 +55,8 @@ int PIC_TacheScrutation
 	MSG_Q_ID idBalDrv = ( MSG_Q_ID ) idBalDrvInt;
 	
 	tabPointeurs = ( PIC_HEADER * * )tabPointeursIN;
+	
+	printf("%d",tabPointeursIN);
 	
 	i = 0;
 	

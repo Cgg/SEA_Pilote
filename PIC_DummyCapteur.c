@@ -9,6 +9,7 @@
 #include "stdlib.h"
 #include "stdio.h"
 #include "taskLib.h"
+#include "timers.h"
 
 /* project includes */
 #include "PIC_DummyCapteur.h"
@@ -28,11 +29,15 @@ int PIC_DummyCapteur
 	int    const nbCapteurs
 )
 {
+	struct timespec sleepTime;
+	
 	MSG_Q_ID balDrv = PIC_RecupererBal();
 	
 	PIC_MESSAGE_BRUTE msg;
 
 	int nbCapteursUtilises = PIC_N_CAPTEURS_MAX;
+	
+	sleepTime.tv_nsec = 0;
 	
 	if ( nbCapteurs >= PIC_N_CAPTEURS_MAX )
 	{
@@ -47,7 +52,8 @@ int PIC_DummyCapteur
 		
 		msgQSend( balDrv, ( char* )&msg, PIC_TAILLE_MSG_BRUTE, NO_WAIT, MSG_PRI_NORMAL );
 		
-		sleep( rand() % ( ( RAND_MAX - 5 ) / 100 ) );
+		sleepTime.tv_nsec = rand() * 1212;  /* environ */
+		nanosleep( &sleepTime, NULL );
 	}
 	
 	return 0;
