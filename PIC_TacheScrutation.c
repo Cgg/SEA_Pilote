@@ -5,7 +5,6 @@
 
 /* system includes */
 #include "stdlib.h"
-#include "stdio.h"
 
 /* project includes */
 #include "PIC_TacheScrutation.h"

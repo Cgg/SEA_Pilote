@@ -9,7 +9,6 @@
 #include "intLib.h"
 #include "errnoLib.h"
 #include "string.h"
-#include "stdio.h"
 
 /* inclusions projet */
 #include "PIC.h"
@@ -20,9 +19,6 @@
 
 #define PIC_NIVEAU_IT				   ( 42 )
 #define PIC_VECTEUR_IT                 ( 0x666 )
-
-
-/* === DECLARATIONS DE TYPES DE DONNEES === */
 
 
 /* === DONNEES STATIQUES === */
@@ -38,6 +34,7 @@ static char * msgBuff = NULL;
 
 /* Tableau de pointeurs sur les capteurs ajoutes */
 static PIC_HEADER * * tabPointeurs = NULL;
+
 
 /* === PROTOTYPES DES FONCTIONS LOCALES === */
 
@@ -161,12 +158,13 @@ int PIC_DevAdd
 	
 	int i;
 	
+	/* Erreur : driver pas installe */
 	if ( numDriver == -1 )
 	{
 		return -1;
 	}
 
-	
+	/* Erreur : un autre capteur possede deja l'adresse du nouveau */
 	for ( i = 0 ; i < PIC_N_CAPTEURS_MAX ; i++ )
 	{
 		if ( tabPointeurs[ i ] != NULL && 
@@ -176,6 +174,7 @@ int PIC_DevAdd
 		}
 	}
 	
+	/* Erreur : quinze capteurs sont deja installes */
 	if ( nombreDevices >= PIC_N_CAPTEURS_MAX )
 	{
 		errnoSet( PIC_E_TOOMANYDEV );
@@ -183,6 +182,7 @@ int PIC_DevAdd
 		return -1;
 	}
 
+	/* Ajout du device */
 	desc = ( PIC_HEADER * ) malloc( sizeof( PIC_HEADER ) );
 	
 	desc->specific.adresseCapteur = adresseCapteur;
@@ -191,6 +191,7 @@ int PIC_DevAdd
 	desc->specific.idBAL = msgQCreate( PIC_N_MESSAGES_MAX, 
 			sizeof( PIC_MESSAGE_CAPTEUR ), MSG_Q_FIFO );
 
+	/* Erreur a la creation de la bal du device */
 	if ( desc->specific.idBAL == NULL )
 	{
 		nombreDevices--;
@@ -200,6 +201,7 @@ int PIC_DevAdd
 		return -1;
 	}
 	
+	/* Erreur a l'ajout du device */
 	if ( iosDevAdd ( ( DEV_HDR * )desc, name, numDriver) == ERROR )
 	{
 		nombreDevices--;
@@ -211,6 +213,7 @@ int PIC_DevAdd
 		return -1;
 	}
 	
+	/* Le device est ajoute au tableau des capteurs installes */
 	for( i = 0 ; i < PIC_N_CAPTEURS_MAX ; i++ )
 	{
 		if( tabPointeurs[ i ] == NULL )
@@ -248,7 +251,9 @@ int PIC_DevDelete
 		
 		for( i = 0 ; i < PIC_N_CAPTEURS_MAX ; i++ )
 		{
-			if( tabPointeurs[ i ] != NULL && tabPointeurs[ i ]->specific.adresseCapteur == ( ( PIC_HEADER * )pDevHdr )->specific.adresseCapteur )
+			if( tabPointeurs[ i ] != NULL &&
+					tabPointeurs[ i ]->specific.adresseCapteur == 
+					( ( PIC_HEADER * )pDevHdr )->specific.adresseCapteur )
 			{
 				tabPointeurs[ i ] = NULL;
 				
@@ -356,21 +361,24 @@ void PIC_DrvInit
 	
 	TIMESTAMP clockInit;
 	
+	/* Allocation et initialisation du tableau des capteurs installes */
 	tabPointeurs = malloc( PIC_N_CAPTEURS_MAX * sizeof( PIC_HEADER * ) );
 	
 	for( i = 0 ; i < PIC_N_CAPTEURS_MAX ; i++ )
 	{
 		tabPointeurs[ i ] = NULL;
 	}
-	
-	idBalDrv = msgQCreate( PIC_N_MESSAGES_MAX, PIC_TAILLE_MSG_BRUTE, MSG_Q_FIFO );
-	
+
+	idBalDrv = msgQCreate( PIC_N_MESSAGES_MAX, PIC_TAILLE_MSG_BRUTE, 
+			MSG_Q_FIFO );
+
 	idTacheScrutation = taskSpawn( "PIC_TacheScrutation", 
 			PIC_PRIORITE_SCRUTATION, 0, PIC_STACK_SCRUTATION, 
 			( FUNCPTR )PIC_TacheScrutation, ( int ) idBalDrv, 
 			( int )tabPointeurs, 0, 0, 0, 0, 0, 0, 0, 0 );
 	
-	intConnect( ( VOIDFUNCPTR * )PIC_VECTEUR_IT, ( VOIDFUNCPTR )PIC_HandlerIT, 0 );
+	intConnect( ( VOIDFUNCPTR * )PIC_VECTEUR_IT, 
+			( VOIDFUNCPTR )PIC_HandlerIT, 0 );
 	
 	clockInit.tv_sec  = 0;
 	clockInit.tv_nsec = 0;
