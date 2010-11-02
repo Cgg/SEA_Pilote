@@ -1,10 +1,6 @@
 % Rapport
 
 % TOADD:
-\textsl{
-Note:\\
-On adopte le préfixe PIC (pour PIlote de Capteur).
-}
 
 Ce pilote est capable de gérer jusqu'à 15 capteurs connectés à la 
 machine via un réseau de type CAN. Chacun dispose d'un identifiant
@@ -20,6 +16,12 @@ Il est possible d'accéder, par une lecture destructrice, aux
 Il est possible, de façon transparante, de réassocier un descripteur
 de fichier ouvert avec un nouveau capteur, si le précédent est 
 par exemple défaillant.
+
+\textsl{
+Note:\\
+On adopte le préfixe PIC (pour PIlote de Capteur).
+}
+
 \section{Spécification des fonctions d'interface}
 
 \subsection{Fonctions publiques}
@@ -27,12 +29,12 @@ par exemple défaillant.
 \begin{m_desc}
 
  \item [PIC\_DrvInstall] \hfill\\
-Installe le driver.
+installe le driver.
 Le temps est réinitialisé, ainsi que la numérotation des messages.
 Retourne 0 en cas de succès, -1 sinon.
 
  \item [PIC\_DrvRemove] \hfill\\
-Désinstalle le driver.
+désinstalle le driver.
 Les capteurs doivent être supprimés.
 Retourne 0 en cas de succès, -1 sinon.
 
@@ -46,7 +48,7 @@ Le périphérique n'est ajouté que si le nombre de capteur utilisé après ajou
 
 Le nom et l'adresse des capteurs doivent être uniques.
 
-Retourne 0 en cas de succès, -1 sinon.
+Retourne le nombre de capteurs en cas de succès, -1 sinon.
 ERRNO est placé à PIC\_E\_TOOMANYDEV si il y a trop de capteurs enregistrés.
 
  \item [PIC\_DevDelete] \hfill\\
@@ -57,9 +59,10 @@ Retourne 0 en cas de succès, -1 sinon.
 \item [PIC\_ioctl]\hfill\\
 permet de contôler le driver.
 Il est possible de réassocier un descripteur de fichier avec un capteur ouvert
-en fournissant le descripteru de fichier et l'adresse du nouveau capteur.
+en fournissant le descripteur de fichier et l'adresse du nouveau capteur.
 
-Retourne 0 en cas de réussite, -1 en cas d'échec.
+Retourne 0 en cas de réussite, -1 en cas d'échec, avec ERRNO placé à 
+PIC\_E\_PARAM\_INCORRECTS.
 \end{m_desc}
 
 
@@ -68,10 +71,11 @@ Retourne 0 en cas de réussite, -1 en cas d'échec.
 On se propose de pratiquer les tests suivants sur notre pilote de périphérique dans les situations suivantes :
 
 \begin{enumerate}
- \item utilisation normale
- \item ajout de plus de quinze capteurs
- \item ouverture du même périphérique plus d'une fois
- \item utilisation de ioctl pour changer le fichier associé au périphérique
- \item ajout/suppression du périphérique, installation/désinstallation du pilote.
- \item test de charge du pilote (envoi de nombreux messages dans un intervalle bref)
+ \item utilisation normale:
+        installation du driver, ajout de plusieurs capteurs, lectures, 
+changement à chaud avec ioctl, retrait capteurs, désinstallation du driver.
+ \item ajout de plus de quinze capteurs:
+On récipère -1 en retour et ERRNO est placé à PIC\_E\_TOOMANYDEV.
+ \item ouverture du même périphérique plus d'une fois:
+On récupère -1 en code retour.
 \end{enumerate}
