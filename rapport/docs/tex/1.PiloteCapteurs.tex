@@ -1,4 +1,4 @@
-% Rapport intermédiaire
+% Rapport
 
 % TOADD:
 \textsl{
@@ -6,6 +6,20 @@ Note:\\
 On adopte le préfixe PIC (pour PIlote de Capteur).
 }
 
+Ce pilote est capable de gérer jusqu'à 15 capteurs connectés à la 
+machine via un réseau de type CAN. Chacun dispose d'un identifiant
+unique, codé sur 8 bits, et envoie un message composé de cet
+identifiant ainsi que de 4 octets de données, exploitable par
+l'application (ex. température).
+Le driver se charge de dater l'arrivée de chaque message.
+La datation est relative au driver, et n'a qu'un usage
+de chronologie de réception des messages.
+Il est possible d'accéder, par une lecture destructrice, aux
+10 dernières valeurs envoyées par le capteur.
+
+Il est possible, de façon transparante, de réassocier un descripteur
+de fichier ouvert avec un nouveau capteur, si le précédent est 
+par exemple défaillant.
 \section{Spécification des fonctions d'interface}
 
 \subsection{Fonctions publiques}
@@ -19,6 +33,7 @@ Retourne 0 en cas de succès, -1 sinon.
 
  \item [PIC\_DrvRemove] \hfill\\
 Désinstalle le driver.
+Les capteurs doivent être supprimés.
 Retourne 0 en cas de succès, -1 sinon.
 
  \item [PIC\_DevAdd] \hfill\\
@@ -27,8 +42,7 @@ ces deux paramètres est laissé à l'utilisateur). Elle vérifie que aucun autr
 capteur n'utilise le même identifiant et/ou le même nom et ajoute le capteur
  si ces conditions sont vérifiées.
 Le périphérique n'est ajouté que si le nombre de capteur utilisé après ajout
- est inférieur ou égal à 15. La fonction met également à jour le nombre 
-de périphériques ajoutés.
+ est inférieur ou égal à 15.
 
 Le nom et l'adresse des capteurs doivent être uniques.
 
@@ -39,6 +53,13 @@ ERRNO est placé à PIC\_E\_TOOMANYDEV si il y a trop de capteurs enregistrés.
 supprime le périphérique demandé si il existe. 
 Retourne 0 en cas de succès, -1 sinon.
 
+
+\item [PIC\_ioctl]\hfill\\
+permet de contôler le driver.
+Il est possible de réassocier un descripteur de fichier avec un capteur ouvert
+en fournissant le descripteru de fichier et l'adresse du nouveau capteur.
+
+Retourne 0 en cas de réussite, -1 en cas d'échec.
 \end{m_desc}
 
 
