@@ -323,5 +323,6 @@ int q
 	PIC_DevDelete( "B" );
 	
 	PIC_DrvRemove();
+	
 	return 0;
 }

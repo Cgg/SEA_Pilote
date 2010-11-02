@@ -300,18 +300,18 @@ int PIC_Read
 	char       * buffer,   /* pointer to buffer to receive bytes */
 	size_t       maxbytes  /* max no. of bytes to read into buffer */
 )
-{
-	if ( sizeof( buffer ) != PIC_TAILLE_MSG_TRAITE || 
+{	
+	if ( /*sizeof( *buffer ) != PIC_TAILLE_MSG_TRAITE || */
 		 maxbytes != PIC_TAILLE_MSG_TRAITE )
 	{
 		errnoSet( PIC_E_PARAM_INCORRECTS );
 
 		return -1;
 	}
-	
+
 	msgQReceive( dev->specific.idBAL, buffer, maxbytes, NO_WAIT );
 	
-	return 0;
+	return PIC_TAILLE_MSG_TRAITE;
 }
 
 /******************************************************************************/
