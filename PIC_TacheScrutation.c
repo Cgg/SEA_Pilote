@@ -42,7 +42,7 @@ int PIC_TacheScrutation
 	 * - goto le debut
 	 */
 	
-	int i;
+	int i = 0;
 	
 	PIC_MESSAGE_BRUTE     messageRecu;	
 	PIC_MESSAGE_CAPTEUR   messageTraite;
@@ -56,13 +56,11 @@ int PIC_TacheScrutation
 	
 	tabPointeurs = ( PIC_HEADER * * )tabPointeursIN;
 	
-	printf("%d",tabPointeursIN);
-	
-	i = 0;
+	printf("%d\n",tabPointeursIN);
 	
 	for( ;; )
 	{
-		if( msgQReceive( idBalDrv, ( char * )&messageRecu, PIC_TAILLE_MSG_BRUTE, 2 ) != -1 )
+		if( msgQReceive( idBalDrv, ( char * )&messageRecu, PIC_TAILLE_MSG_BRUTE, WAIT_FOREVER ) != -1 )
 		{
 			clock_gettime( CLOCK_REALTIME, &tempsArrivee );
 			
@@ -70,7 +68,7 @@ int PIC_TacheScrutation
 			messageTraite.tArrivee   = tempsArrivee;
 			messageTraite.numMessage = ++compteurMessage;
 			
-			while( i < PIC_N_CAPTEURS_MAX )
+			for( i = 0 ; i < PIC_N_CAPTEURS_MAX ; i++ )
 			{
 				if( tabPointeurs[ i ] != NULL && messageRecu.adresseCapteur == tabPointeurs[ i ]->specific.adresseCapteur )
 				{
@@ -78,8 +76,6 @@ int PIC_TacheScrutation
 					
 					i = PIC_N_CAPTEURS_MAX;
 				}
-				
-				i++;
 			}
 	
 			if( destinataire != NULL )

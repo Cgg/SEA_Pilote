@@ -301,8 +301,7 @@ int PIC_Read
 	size_t       maxbytes  /* max no. of bytes to read into buffer */
 )
 {	
-	if ( /*sizeof( *buffer ) != PIC_TAILLE_MSG_TRAITE || */
-		 maxbytes != PIC_TAILLE_MSG_TRAITE )
+	if ( maxbytes != PIC_TAILLE_MSG_TRAITE )
 	{
 		errnoSet( PIC_E_PARAM_INCORRECTS );
 
