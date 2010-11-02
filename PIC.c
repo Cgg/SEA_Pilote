@@ -370,7 +370,8 @@ void PIC_DrvInit
 	
 	idTacheScrutation = taskSpawn( "PIC_TacheScrutation", 
 			PIC_PRIORITE_SCRUTATION, 0, PIC_STACK_SCRUTATION, 
-			( FUNCPTR )PIC_TacheScrutation, ( int ) idBalDrv, 0, 0, 0, 0, 0, 0, 0, 0, 0 );
+			( FUNCPTR )PIC_TacheScrutation, ( int ) idBalDrv, 
+			( int )tabPointeurs, 0, 0, 0, 0, 0, 0, 0, 0 );
 	
 	intConnect( ( VOIDFUNCPTR * )PIC_VECTEUR_IT, ( VOIDFUNCPTR )PIC_HandlerIT, 0 );
 	
