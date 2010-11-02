@@ -37,7 +37,7 @@ int PIC_DummyCapteur
 
 	int nbCapteursUtilises = PIC_N_CAPTEURS_MAX;
 	
-	sleepTime.tv_nsec = 0;
+	sleepTime.tv_sec = 0;
 	
 	if ( nbCapteurs >= PIC_N_CAPTEURS_MAX )
 	{
@@ -46,13 +46,14 @@ int PIC_DummyCapteur
 	
 	for( ;; )
 	{
-		msg.adresseCapteur = tabAdressesCapteurs[ ( rand() % nbCapteurs ) - 1 ],
+		msg.adresseCapteur = tabAdressesCapteurs[ ( rand() % nbCapteurs ) ];
 		
 		msg.message = 10 * msg.adresseCapteur;
 		
 		msgQSend( balDrv, ( char* )&msg, PIC_TAILLE_MSG_BRUTE, NO_WAIT, MSG_PRI_NORMAL );
 		
-		sleepTime.tv_nsec = rand() * 1212;  /* environ */
+		sleepTime.tv_nsec = rand() * 1000;  /* environ, pour un message toutes les 0-20 ms */
+
 		nanosleep( &sleepTime, NULL );
 	}
 	
@@ -84,6 +85,7 @@ int PIC_SimStop
 	if ( idTacheSimulation != 0 )
 	{
 		taskDelete( idTacheSimulation );
+		
 		idTacheSimulation = 0;
 	}
 }

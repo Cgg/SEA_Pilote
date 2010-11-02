@@ -1,9 +1,11 @@
 /* === INCLUDE === */
 
+/* includes systems */
 #include "stdioLib.h"
 #include "timers.h"
 #include "stdlib.h"
 
+/* include projet */
 #include "PIC.h"
 #include "PIC_ListeCapteurs.h"
 #include "PIC_DummyCapteur.h"
@@ -260,69 +262,77 @@ int PIC_TestEnlevement
 	return 0;
 }
 
-int q
+/******************************************************************************/
+int quickDemo
 (
 	void
 )
 {
-	int fdC1;
-	int fdC2;
-	int i;
+	int i,j;
+	
+	int fdC[ PIC_N_CAPTEURS_MAX ];
+	
+	char * nomCapteur = ( char * )malloc( 2 * sizeof( char ) );
+	char   tabAdresseCapteurs[ PIC_N_CAPTEURS_MAX ];
 	
 	struct timespec time;
 	
 	PIC_MESSAGE_CAPTEUR * messageCapteur = 
 			( PIC_MESSAGE_CAPTEUR * )malloc( PIC_TAILLE_MSG_TRAITE );
 	
-	char * tabAdresseCapteurs = malloc( 2 * sizeof( char ) );
-	
 	time.tv_nsec = 0;
 	time.tv_sec  = 1;
 	
 	PIC_DrvInstall();
 	
-	PIC_DevAdd( "A", 65 );
-	PIC_DevAdd( "B", 66 );
+	nomCapteur[ 1 ] = '\0';
 	
-	fdC1 = open( "A", O_RDONLY, 777 );
-	fdC2 = open( "B", O_RDONLY, 777 );
-	
-	tabAdresseCapteurs[ 0 ] = 65;
-	tabAdresseCapteurs[ 1 ] = 66;
-	
-	for( i = 2 ; i < PIC_N_CAPTEURS_MAX ; i++ )
+	for( i = 0 ; i < PIC_N_CAPTEURS_MAX ; i++ )
 	{
-		tabAdresseCapteurs[ i ] = 0;
+		nomCapteur[ 0 ] = ( char )( i + 65 );
+		
+		PIC_DevAdd( nomCapteur, i + 65 );
+		
+		tabAdresseCapteurs[ i ] = i + 65;
+		
+		fdC[ i ] = open( nomCapteur, O_RDONLY, 644 );
 	}
+
+	PIC_SimStart( tabAdresseCapteurs, 15 );
 	
-	PIC_SimStart( tabAdresseCapteurs, 2 );
+	nanosleep( &time, NULL );
 	
-	for( i = 0 ; i < 10 ; i++ )
+	for( i = 0 ; i < 5 ; i++ )
 	{
-		printf( "lecture du capteur d'adresse 15 puis 17.\n");
+		for( j = 0 ; j < PIC_N_CAPTEURS_MAX ; j++ )
+		{
+			printf( "%d bytes lus sur le capteur %d.\n", read( fdC[ j ],
+					( char * )messageCapteur, PIC_TAILLE_MSG_TRAITE), 
+					tabAdresseCapteurs[ j ] );
+			printf( "Message n. %d : %d\n", messageCapteur->numMessage, 
+					messageCapteur->message );
+		}
 		
-		printf( "%d bytes lus du capteur 15.\n", read( fdC1,
-				( char * )messageCapteur, PIC_TAILLE_MSG_TRAITE ) );
-		
-		printf( "message : %d.\n", ( int )( messageCapteur->message ) );
-		
-		printf( "%d bytes lus du capteur 17.\n", read( fdC2,
-				( char * )messageCapteur, PIC_TAILLE_MSG_TRAITE ) );
-		
-		printf( "message : %d.\n", ( int )( messageCapteur->message ) );
+		printf( "\n" );
 		
 		nanosleep( &time, NULL );
 	}	
 
-	close( fdC1 );
-	close( fdC2 );
-	
 	PIC_SimStop();
 	
-	PIC_DevDelete( "A" );
-	PIC_DevDelete( "B" );
+	for( i = 0 ; i < PIC_N_CAPTEURS_MAX ; i++ )
+	{
+		nomCapteur[ 0 ] = ( char )( i + 65 );
+		
+		close( fdC[ i ] );
+		
+		//PIC_DevDelete( nomCapteur );
+	}
 	
-	PIC_DrvRemove();
+	return PIC_DrvRemove();
+	
+	free( messageCapteur );
+	free( nomCapteur );
 	
 	return 0;
 }
