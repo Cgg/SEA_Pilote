@@ -28,6 +28,8 @@
 #define PIC_E_TOOMANYDEV			   ( 90 )
 #define PIC_E_PARAM_INCORRECTS         ( 91 )
 
+#define PIC_IOCTL_FONCTION_HOT_SWAP    ( 1 )
+
 
 /* === DECLARATIONS DE TYPES DE DONNEES === */
 

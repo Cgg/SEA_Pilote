@@ -18,7 +18,7 @@
 
 /* === DEFINITIONS DE CONSTANTES === */
 
-#define NIVEAU_IT					   ( 42 )
+#define PIC_NIVEAU_IT				   ( 42 )
 #define PIC_VECTEUR_IT                 ( 0x666 )
 
 
@@ -322,7 +322,18 @@ int PIC_IoCtl
 	int          arg
 )
 {
-	return 0;
+	if ( ( desc != NULL ) && ( fonction == PIC_IOCTL_FONCTION_HOT_SWAP ) )
+	{
+		desc->specific.adresseCapteur = arg;
+			
+		return 0;
+	}
+	else
+	{
+		errnoSet( PIC_E_PARAM_INCORRECTS );
+	}
+	
+	return -1;
 }
 
 /******************************************************************************/
@@ -331,11 +342,11 @@ int PIC_HandlerIT
 	void
 )
 {
-	sysIntDisable( NIVEAU_IT );
+	sysIntDisable( PIC_NIVEAU_IT );
 	
 	msgQSend( idBalDrv, ( char * )msgBuff, PIC_TAILLE_MSG_BRUTE, NO_WAIT, MSG_PRI_NORMAL );
 	
-	sysIntEnable( NIVEAU_IT );
+	sysIntEnable( PIC_NIVEAU_IT );
 }
 
 /******************************************************************************/
