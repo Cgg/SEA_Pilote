@@ -1,9 +1,11 @@
 /* === INCLUDE === */
 
+/* includes systems */
 #include "stdioLib.h"
 #include "timers.h"
 #include "stdlib.h"
 
+/* include projet */
 #include "PIC.h"
 #include "PIC_ListeCapteurs.h"
 #include "PIC_DummyCapteur.h"
