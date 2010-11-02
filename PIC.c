@@ -246,7 +246,7 @@ int PIC_DevDelete
 		
 		msgQDelete( ( ( PIC_HEADER * )pDevHdr )->specific.idBAL );
 		
-		while( i < PIC_N_CAPTEURS_MAX )
+		for( i = 0 ; i < PIC_N_CAPTEURS_MAX ; i++ )
 		{
 			if( tabPointeurs[ i ] != NULL && tabPointeurs[ i ]->specific.adresseCapteur == ( ( PIC_HEADER * )pDevHdr )->specific.adresseCapteur )
 			{
@@ -254,8 +254,6 @@ int PIC_DevDelete
 				
 				i = PIC_N_CAPTEURS_MAX;
 			}
-			
-			i++;
 		}
 		
 		iosDevDelete( pDevHdr );

@@ -270,7 +270,7 @@ int quickDemo
 	
 	int fdC[ PIC_N_CAPTEURS_MAX ];
 	
-	char   nomCapteur[ 2 ];
+	char * nomCapteur = ( char * )malloc( 2 * sizeof( char ) );
 	char   tabAdresseCapteurs[ PIC_N_CAPTEURS_MAX ];
 	
 	struct timespec time;
@@ -296,7 +296,6 @@ int quickDemo
 		fdC[ i ] = open( nomCapteur, O_RDONLY, 644 );
 	}
 
-	
 	PIC_SimStart( tabAdresseCapteurs, 15 );
 	
 	nanosleep( &time, NULL );
@@ -317,20 +316,21 @@ int quickDemo
 		nanosleep( &time, NULL );
 	}	
 
-	/*for( i = 0 ; i < PIC_N_CAPTEURS_MAX ; i++ )
+	PIC_SimStop();
+	
+	for( i = 0 ; i < PIC_N_CAPTEURS_MAX ; i++ )
 	{
 		nomCapteur[ 0 ] = ( char )( i + 65 );
 		
 		close( fdC[ i ] );
 		
-		PIC_DevDelete( nomCapteur );
-	}*/
+		//PIC_DevDelete( nomCapteur );
+	}
 	
-	PIC_SimStop();
-	
-	PIC_DrvRemove();
+	return PIC_DrvRemove();
 	
 	free( messageCapteur );
+	free( nomCapteur );
 	
 	return 0;
 }
