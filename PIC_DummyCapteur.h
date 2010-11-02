@@ -2,7 +2,8 @@
 #define PIC_DUMMY_CAPTEUR
 
 /* === INCLUDES === */
-#include "msgQLib.h"
+
+/* include projet */
 #include "PIC.h"
 
 
