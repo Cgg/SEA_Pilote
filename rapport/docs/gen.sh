@@ -64,23 +64,16 @@ echo "
 # Listings
 
 echo "
-\usepackage{listings}
-% Configuration des options 
-  \lstset{%
-    basicstyle=\ttfamily \footnotesize, %
-    columns = flexible,%
-    tabsize = 4,%
-    showspaces = false,%
-     showstringspaces = false,%
-    numbers = left, numberstyle=\tiny,%
-    frame = single,%frameround=,%
-    breaklines = false, breakautoindent = false,%
-   captionpos = b,%
-   xrightmargin=10mm, xleftmargin = 10mm, framexleftmargin = 7mm,%
-   language = C,%
- %   %fancyvrb=true,%
- %   %texcsstyle=keywordstyle2,%
-  }%
+ \usepackage{minted}
+\newminted{sql}{%
+	linenos=true,%
+	fontsize=\footnotesize,%
+	frame=single,%
+	framesep=9pt,%
+	xrightmargin=8mm,%
+	xleftmargin=15mm,%
+	resetmargins=true,%
+}%
 " >> $FILE
 
 
