@@ -2,14 +2,18 @@
 
 \section{Plan de test}
 
-On se propose de pratiquer les tests suivants sur notre pilote de périphérique dans les situations suivantes :
+On se propose de pratiquer les tests suivants sur notre
+ pilote de périphérique dans les situations suivantes :
 
 \begin{enumerate}
  \item utilisation normale:
-        installation du driver, ajout de plusieurs capteurs, lectures, 
-changement à chaud avec ioctl, retrait capteurs, désinstallation du driver.
+        installation du driver, ajout de plusieurs
+ capteurs, lectures, 
+changement à chaud avec ioctl, retrait capteurs, 
+désinstallation du driver.
  \item ajout de plus de quinze capteurs:
-On récipère -1 en retour et ERRNO est placé à PIC\_E\_TOOMANYDEV.
+On récipère -1 en retour et ERRNO est placé à 
+PIC\_E\_TOOMANYDEV.
  \item ouverture du même périphérique plus d'une fois:
 On récupère -1 en code retour.
 \end{enumerate}

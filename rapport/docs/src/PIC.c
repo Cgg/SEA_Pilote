@@ -9,7 +9,7 @@
 #include "intLib.h"
 #include "errnoLib.h"
 #include "string.h"
-
+#include "stdioLib.h"
 /* inclusions projet */
 #include "PIC.h"
 #include "PIC_TacheScrutation.h"
@@ -40,7 +40,7 @@ static PIC_HEADER * * tabPointeurs = NULL;
 /* prototypes des primitives d'utilisation du PIC */
 
 /******************************************************************************/
-int PIC_Open
+static int PIC_Open
 (
 	PIC_HEADER * desc,
 	char       * remainder,
@@ -48,13 +48,13 @@ int PIC_Open
 );
 
 /******************************************************************************/
-int PIC_Close
+static int PIC_Close
 (
 	PIC_HEADER * desc
 );
 
 /******************************************************************************/
-int PIC_Read
+static int PIC_Read
 (
 	PIC_HEADER * dev,      /* device from which to read */
 	char       * buffer,   /* pointer to buffer to receive bytes */
@@ -62,7 +62,7 @@ int PIC_Read
 );
 
 /******************************************************************************/
-int PIC_IoCtl
+static int PIC_IoCtl
 (
 	PIC_HEADER * desc,
 	int          fonction,
@@ -72,7 +72,7 @@ int PIC_IoCtl
 /* Handler d'interruptions envoyees par la carte des capteurs */
 
 /******************************************************************************/
-int PIC_HandlerIT
+static int PIC_HandlerIT
 (
 	void
 );
@@ -80,13 +80,13 @@ int PIC_HandlerIT
 /* prototype des autres fonctions locales */
 
 /******************************************************************************/
-void PIC_DrvInit
+static void PIC_DrvInit
 (
 	void
 );
 
 /******************************************************************************/
-void PIC_DrvConclude
+static void PIC_DrvConclude
 (
 	void
 );
@@ -285,7 +285,7 @@ int PIC_DevDelete
 }
 
 /******************************************************************************/
-int PIC_Open
+static int PIC_Open
 (
 	PIC_HEADER * desc,
 	char       * remainder,
@@ -305,7 +305,7 @@ int PIC_Open
 }
 
 /******************************************************************************/
-int PIC_Close
+static int PIC_Close
 (
 	PIC_HEADER * desc
 )
@@ -314,7 +314,7 @@ int PIC_Close
 }
 
 /******************************************************************************/
-int PIC_Read
+static int PIC_Read
 (
 	PIC_HEADER * dev,      /* device from which to read */
 	char       * buffer,   /* pointer to buffer to receive bytes */
@@ -328,16 +328,11 @@ int PIC_Read
 		return -1;
 	}
 
-	if ( msgQReceive( dev->specific.idBAL, buffer, maxbytes, NO_WAIT ) == ERROR );
-	{
-		return -1;
-	}
-
-	return PIC_TAILLE_MSG_TRAITE;
+	return msgQReceive( dev->specific.idBAL, buffer, maxbytes, NO_WAIT );
 }
 
 /******************************************************************************/
-int PIC_IoCtl
+static int PIC_IoCtl
 (
 	PIC_HEADER * desc,
 	int          fonction,
@@ -359,7 +354,7 @@ int PIC_IoCtl
 }
 
 /******************************************************************************/
-int PIC_HandlerIT
+static int PIC_HandlerIT
 (
 	void
 )
@@ -373,7 +368,7 @@ int PIC_HandlerIT
 }
 
 /******************************************************************************/
-void PIC_DrvInit
+static void PIC_DrvInit
 (
 	void
 )
@@ -393,6 +388,11 @@ void PIC_DrvInit
 	idBalDrv = msgQCreate( PIC_N_MESSAGES_MAX, PIC_TAILLE_MSG_BRUTE, 
 			MSG_Q_FIFO );
 
+	clockInit.tv_sec  = 0;
+	clockInit.tv_nsec = 0;
+	
+	clock_settime( CLOCK_REALTIME, &clockInit );
+
 	idTacheScrutation = taskSpawn( "PIC_TacheScrutation", 
 			PIC_PRIORITE_SCRUTATION, 0, PIC_STACK_SCRUTATION, 
 			( FUNCPTR )PIC_TacheScrutation, ( int ) idBalDrv, 
@@ -400,15 +400,10 @@ void PIC_DrvInit
 	
 	intConnect( ( VOIDFUNCPTR * )PIC_VECTEUR_IT, 
 			( VOIDFUNCPTR )PIC_HandlerIT, 0 );
-	
-	clockInit.tv_sec  = 0;
-	clockInit.tv_nsec = 0;
-	
-	clock_settime( CLOCK_REALTIME, &clockInit );
 }
 
 /******************************************************************************/
-void PIC_DrvConclude
+static void PIC_DrvConclude
 (
 	void
 )

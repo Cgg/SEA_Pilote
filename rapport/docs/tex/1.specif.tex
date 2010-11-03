@@ -96,6 +96,22 @@ Retourne PIC\_TAILLE\_MSG\_TRAITE en cas de succès, -1 sinon.\\
 ERRNO est placé à PIC\_E\_PAS\_DE\_MESSAGE si la liste de message
 est vide.
 
+
+\item[Valeurs des codes ERRNO:]\hfill\\
+\begin{center}
+   \begin{tabular}{ | c | c | }
+     \hline
+Code                         &   Valeur\\ \hline
+PIC\_E\_TOOMANYDEV		     &   ERRMAX +1\\ \hline
+PIC\_E\_PARAM\_INCORRECTS    &   ERRMAX +1\\ \hline
+PIC\_E\_PIC\_DEJA\_INSTALLE  &   ERRMAX +1\\ \hline
+PIC\_E\_PIC\_PAS\_INSTALLE   &   ERRMAX +1\\ \hline
+PIC\_E\_DEV\_DEJA\_PRESENT   &   ERRMAX +1\\ \hline
+PIC\_E\_DEV\_NON\_PRESENT    &   ERRMAX +1\\ \hline
+PIC\_E\_PAS\_DE\_MESSAGE	 &	 S\_objLib\_OBJ\_UNAVAILABLE\\ \hline
+   \end{tabular}
+ \end{center}
+
 \end{m_desc}
 
 \vfill

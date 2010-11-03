@@ -13,7 +13,7 @@
 /* === PROTOTYPES DES FONCTIONS LOCALES === */
 
 /******************************************************************************/
-int main
+int PIC_RunTests
 (
 	void
 );
@@ -48,7 +48,7 @@ int PIC_TestEnlevement
 /* === IMPLEMENTATION === */
 
 /******************************************************************************/
-int main
+int PIC_RunTests
 (
 	void
 )
@@ -66,6 +66,11 @@ int main
 	if( PIC_TestAjout() == 0 )
 	{
 		printf( "\nTest Ajout reussi !\n\n" );
+	}
+	
+	if( PIC_TestEnlevement() == 0 )
+	{
+		printf( "\nTest Enlevement reussi !\n\n" );
 	}
 	
 	return 0;
@@ -238,21 +243,21 @@ int PIC_TestEnlevement
 	
 	if( PIC_DevDelete( "a" ) == 0 )
 	{
-		printf( "Enlevement normal reussi." );
+		printf( "Enlevement normal reussi.\n" );
 	}
 	else
 	{
-		printf( "Enlevement normal echoue." );
+		printf( "Enlevement normal echoue.\n" );
 		return -1;
 	}
 	
-	if( PIC_DevDelete( "a" ) == 0 )
+	if( PIC_DevDelete( "b" ) == -1 )
 	{
-		printf( "Enlevement d'un device inexistant echoue." );
+		printf( "Enlevement d'un device inexistant echoue.\n" );
 	}
 	else
 	{
-		printf( "Enlevement d'un device inexistant reussi." );
+		printf( "Enlevement d'un device inexistant reussi.\n" );
 		return -1;
 	}
 	
@@ -267,7 +272,7 @@ int quickDemo
 	void
 )
 {
-	int i,j;
+	int i,j,k;
 	
 	int fdC[ PIC_N_CAPTEURS_MAX ];
 	
@@ -300,16 +305,25 @@ int quickDemo
 	PIC_SimStart( tabAdresseCapteurs, 15 );
 	
 	nanosleep( &time, NULL );
-	
+
 	for( i = 0 ; i < 5 ; i++ )
 	{
 		for( j = 0 ; j < PIC_N_CAPTEURS_MAX ; j++ )
 		{
-			printf( "%d bytes lus sur le capteur %d.\n", read( fdC[ j ],
-					( char * )messageCapteur, PIC_TAILLE_MSG_TRAITE), 
-					tabAdresseCapteurs[ j ] );
-			printf( "Message n. %d : %d\n", messageCapteur->numMessage, 
-					messageCapteur->message );
+			k = read( fdC[ j ],
+					( char * )messageCapteur, PIC_TAILLE_MSG_TRAITE );
+			
+			if( k != -1 )
+			{
+				printf( "%d bytes lus sur le capteur %d.\n", k, tabAdresseCapteurs[ j ] );
+				printf( "Message n. %d arrive a %d s et %d ns : %d\n", messageCapteur->numMessage, 
+						messageCapteur->tArrivee.tv_sec, messageCapteur->tArrivee.tv_nsec,
+						messageCapteur->message ); 
+			}
+			else
+			{
+				printf( "Pas de message pour le capteur %d.\n", tabAdresseCapteurs[ j ] );
+			}					
 		}
 		
 		printf( "\n" );

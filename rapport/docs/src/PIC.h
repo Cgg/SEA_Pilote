@@ -25,12 +25,12 @@
 
 #define PIC_N_CAPTEURS_MAX             ( 15 )
 
-#define PIC_E_TOOMANYDEV			   ( 90 )
-#define PIC_E_PARAM_INCORRECTS         ( 91 )
-#define PIC_E_PIC_DEJA_INSTALLE        ( 92 )
-#define PIC_E_PIC_PAS_INSTALLE         ( 93 )
-#define PIC_E_DEV_DEJA_PRESENT         ( 94 )
-#define PIC_E_DEV_NON_PRESENT          ( 95 )
+#define PIC_E_TOOMANYDEV			   ( ERRMAX + 1 )
+#define PIC_E_PARAM_INCORRECTS         ( ERRMAX + 2 )
+#define PIC_E_PIC_DEJA_INSTALLE        ( ERRMAX + 3 )
+#define PIC_E_PIC_PAS_INSTALLE         ( ERRMAX + 4 )
+#define PIC_E_DEV_DEJA_PRESENT         ( ERRMAX + 5 )
+#define PIC_E_DEV_NON_PRESENT          ( ERRMAX + 6 )
 #define PIC_E_PAS_DE_MESSAGE		   ( S_objLib_OBJ_UNAVAILABLE )
 
 #define PIC_IOCTL_FONCTION_HOT_SWAP    ( 1 )
