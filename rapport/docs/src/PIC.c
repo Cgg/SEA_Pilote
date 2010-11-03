@@ -327,8 +327,10 @@ int PIC_Read
 		return -1;
 	}
 
-	msgQReceive( dev->specific.idBAL, buffer, maxbytes, NO_WAIT );
-	
+	if ( msgQReceive( dev->specific.idBAL, buffer, maxbytes, NO_WAIT ) == ERROR );
+	{
+		return -1;
+	}
 	return PIC_TAILLE_MSG_TRAITE;
 }
 

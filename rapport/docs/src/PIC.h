@@ -31,6 +31,7 @@
 #define PIC_E_PIC_PAS_INSTALLE         ( 93 )
 #define PIC_E_DEV_DEJA_PRESENT         ( 94 )
 #define PIC_E_DEV_NON_PRESENT          ( 95 )
+#define PIC_E_PAS_DE_MESSAGE		   S_objLib_OBJ_UNAVAILABLE
 
 #define PIC_IOCTL_FONCTION_HOT_SWAP    ( 1 )
 
