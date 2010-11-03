@@ -1,0 +1,48 @@
+-> PIC_RunTests
+======
+Test d'installation du driver.
+ - installation normale
+ - deuxieme installation devant echouer.
+
+Installation normale reussie.
+Deuxieme installation echouee.
+
+Test Installation reussi !
+
+======
+Test de desinstallation du driver.
+ - desinstallation normale apres installation
+ - deuxieme desinstallation devant echouer.
+
+Desinstallation normale reussi.
+Deuxieme desinstallation echouee.
+
+Test Desinstallation reussi !
+
+======
+Test d'ajouts de device.
+ - ajout normal
+ - ajout sans installation du driver correspondant
+ - ajout de deux capteurs ayant la meme adresse
+ - ajout de deux capteurs ayant le meme nom
+ - ajout de plus de 255 capteurs.
+
+Ajout normal reussi.
+Ajout sans driver installe echoue.
+Ajout de deux capteurs ayant la meme adresse echoue.
+Ajout de deux capteurs ayant le meme nom echoue.
+
+Test Ajout reussi !
+
+======
+Test d'retraits de device.
+ - retrait normal
+ - retrait d'un device inexistant.
+                  
+Retrait normal reussi.
+Retrait d'un device inexistant echoue.
+
+Test Enlevement reussi !
+
+-> 
+
