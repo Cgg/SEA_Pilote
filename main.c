@@ -308,7 +308,8 @@ int quickDemo
 			printf( "%d bytes lus sur le capteur %d.\n", read( fdC[ j ],
 					( char * )messageCapteur, PIC_TAILLE_MSG_TRAITE), 
 					tabAdresseCapteurs[ j ] );
-			printf( "Message n. %d : %d\n", messageCapteur->numMessage, 
+			printf( "Message n. %d arrive a %d s et %d ns : %d\n", messageCapteur->numMessage, 
+					messageCapteur->tArrivee.tv_sec, messageCapteur->tArrivee.tv_nsec,
 					messageCapteur->message );
 		}
 		
