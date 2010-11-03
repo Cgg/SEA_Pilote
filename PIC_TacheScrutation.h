@@ -14,12 +14,6 @@
 #ifndef PIC_TACHE_SCRUTATION
 #define PIC_TACHE_SCRUTATION
 
-/* === DEFINITION DE CONSTANTES === */
-
-#define PIC_PRIORITE_SCRUTATION        ( 1 )
-#define PIC_STACK_SCRUTATION           ( 20000 )
-
-
 /* === PROTOTYPES DES FONCTIONS EXPOSEES === */
 
 /******************************************************************************/

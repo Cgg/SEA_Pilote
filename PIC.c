@@ -139,7 +139,8 @@ int PIC_DrvRemove
 	{
 		if ( iosDrvRemove( numDriver, TRUE ) == OK )
 		{		
-			numDriver = -1;
+			numDriver     = -1;
+			nombreDevices = 0;
 			
 			PIC_DrvConclude();
 			
@@ -394,7 +395,7 @@ static void PIC_DrvInit
 	clock_settime( CLOCK_REALTIME, &clockInit );
 
 	idTacheScrutation = taskSpawn( "PIC_TacheScrutation", 
-			PIC_PRIORITE_SCRUTATION, 0, PIC_STACK_SCRUTATION, 
+			1, 0, 20000, 
 			( FUNCPTR )PIC_TacheScrutation, ( int ) idBalDrv, 
 			( int )tabPointeurs, 0, 0, 0, 0, 0, 0, 0, 0 );
 	
