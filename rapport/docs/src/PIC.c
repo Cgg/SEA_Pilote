@@ -346,7 +346,8 @@ int PIC_HandlerIT
 {
 	sysIntDisable( PIC_NIVEAU_IT );
 	
-	msgQSend( idBalDrv, ( char * )msgBuff, PIC_TAILLE_MSG_BRUTE, NO_WAIT, MSG_PRI_NORMAL );
+	msgQSend( idBalDrv, ( char * )msgBuff, PIC_TAILLE_MSG_BRUTE,
+                                                 NO_WAIT, MSG_PRI_NORMAL );
 	
 	sysIntEnable( PIC_NIVEAU_IT );
 }
