@@ -9,7 +9,6 @@
 /* project includes */
 #include "PIC_TacheScrutation.h"
 #include "PIC.h"
-#include "PIC_ListeCapteurs.h"
 
 
 /* === DONNEES STATIQUES === */
