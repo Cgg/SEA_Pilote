@@ -239,11 +239,7 @@ int PIC_TestEnlevement
 	
 	PIC_DrvInstall();
 	
-	printf("toto\n");
-	
 	PIC_DevAdd( "a", 42 );
-	
-	iosDevShow();
 	
 	if( PIC_DevDelete( "a" ) == 0 )
 	{
