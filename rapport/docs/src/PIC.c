@@ -280,6 +280,7 @@ int PIC_DevDelete
     {
         errnoSet( PIC_E_DEV_NON_PRESENT );
 	}
+
 	return retour;
 }
 
@@ -299,7 +300,7 @@ int PIC_Open
 	}
 	else
 	{
-		return ( ( int ) desc ) ;
+		return ( int )desc;
 	}
 }
 
@@ -331,6 +332,7 @@ int PIC_Read
 	{
 		return -1;
 	}
+
 	return PIC_TAILLE_MSG_TRAITE;
 }
 
