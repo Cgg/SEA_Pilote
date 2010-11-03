@@ -29,23 +29,24 @@ On adopte le préfixe PIC (pour PIlote de Capteur).
 
 \subsection{Fonctions publiques}
 
-\begin{m_desc}
+%\begin{m_desc}
 
- \item [PIC\_DrvInstall()] \hfill\\
+ \subsubsection{[PIC\_DrvInstall()]} \hfill\\
 installe le driver.\\
 Le temps est réinitialisé, ainsi que la numérotation des messages.\\
-Retourne 0 en cas de succès, -1 sinon.\\
+Retourne un entier correspondant au numéro du driver
+ en cas de succès, -1 sinon.\\
 ERRNO est placé à PIC\_E\_PIC\_DEJA\_INSTALLE si le driver est déjà 
 installé.
 
- \item [PIC\_DrvRemove()] \hfill\\
+ \subsubsection{[PIC\_DrvRemove()]} \hfill\\
 désinstalle le driver.\\
 Les capteurs doivent être supprimés.\\
 Retourne 0 en cas de succès, -1 sinon.\\
 ERRNO est placé à PIC\_E\_PIC\_PAS\_INSTALLE si le driver n'est pas 
 installé.
 
- \item [PIC\_DevAdd(char *const name, char const adresseCapteur)] \hfill\\
+ \subsubsection{[PIC\_DevAdd(char *const name, char const adresseCapteur)]} \hfill\\
  prend comme paramètres le nom \textsl{name} du capteur et son identifiant \textsl{adresseCapteur} associé.\\
  Elle vérifie qu'aucun autre 
 capteur n'utilise le même nom et ajoute le capteur
@@ -60,20 +61,20 @@ ERRNO est placé à PIC\_E\_TOOMANYDEV si il y a trop de capteurs
  enregistrés, à PIC\_E\_PIC\_PAS\_INSTALLE si le driver n'est pas installé,
 ou à PIC\_E\_DEV\_DEJA\_PRESENT si un capteur de ce nom éxiste.
 
- \item [PIC\_DevDelete(char * name)] \hfill\\
+ \subsubsection{[PIC\_DevDelete(char * name)]} \hfill\\
 supprime le périphérique \textsl{name} si il existe.\\
 Retourne 0 en cas de succès, -1 sinon.\\
 ERRNO est positionné à PIC\_E\_DEV\_NON\_PRESENT si le capteur demandé 
 n'est pas installé.
 
-\item [PIC\_ioctl(int fd, int func, int arg)]\hfill\\
+\subsubsection{[PIC\_ioctl(int fd, int func, int arg)]} \hfill\\
 permet de contôler le driver.\\
 Il est possible de réassocier le descripteur de fichier \textsl{fd} avec le capteur passé en \textsl{arg}.\\
 \textsl{func} doit valoir PIC\_IOCTL\_FONCTION\_HOT\_SWAP, la seule fonction disponible.\\
 Retourne 0 en cas de réussite, -1 en cas d'échec.\\
 ERRNO est placé à PIC\_E\_PARAM\_INCORRECTS dans ce cas.
 
-\item [open(char* name, int mode, int flag)]\hfill\\
+\subsubsection{[open(char* name, int mode, int flag)]} \hfill\\
 ouvre le capteur \textsl{name} en lecture seule (on ne peut pas écrire
 sur un capteur).
 Le capteur à été ajouté avec \textsl{DevAdd} antérieurement.
@@ -82,10 +83,10 @@ Retourne le descripteur de fichier correspondant si l'appel réussi, -1 sinon.\\
 ERRNO est positionné à PIC\_E\_DEV\_NON\_PRESENT si le capteur demandé 
 n'est pas installé.
 
-\item [close(int fd)]\hfill\\
+\subsubsection{[close(int fd)]} \hfill\\
 ferme le descripteur de fichier \textsl{fd}.
 
-\item [read(int fd, char* buffer, int nbBytes)]\hfill\\
+\subsubsection{[read(int fd, char* buffer, int nbBytes)]}\hfill\\
 lit de façon consommatrice la valeur la plus ancienne envoyée par le 
 capteur dont le descripteur de fichier est  \textsl{fd}.\\
 Une structure PIC\_MESSAGE\_CAPTEUR est copiée dans \textsl{buffer}.\\
@@ -97,22 +98,22 @@ ERRNO est placé à PIC\_E\_PAS\_DE\_MESSAGE si la liste de message
 est vide.
 
 
-\item[Valeurs des codes ERRNO:]\hfill\\
+\subsection{Valeurs des codes ERRNO:} \hfill\\
 \begin{center}
    \begin{tabular}{ | c | c | }
      \hline
 Code                         &   Valeur\\ \hline
-PIC\_E\_TOOMANYDEV		     &   ERRMAX +1\\ \hline
-PIC\_E\_PARAM\_INCORRECTS    &   ERRMAX +1\\ \hline
-PIC\_E\_PIC\_DEJA\_INSTALLE  &   ERRMAX +1\\ \hline
-PIC\_E\_PIC\_PAS\_INSTALLE   &   ERRMAX +1\\ \hline
-PIC\_E\_DEV\_DEJA\_PRESENT   &   ERRMAX +1\\ \hline
-PIC\_E\_DEV\_NON\_PRESENT    &   ERRMAX +1\\ \hline
+PIC\_E\_TOOMANYDEV		     &   ERRMAX + 1\\ \hline
+PIC\_E\_PARAM\_INCORRECTS    &   ERRMAX + 2\\ \hline
+PIC\_E\_PIC\_DEJA\_INSTALLE  &   ERRMAX + 3\\ \hline
+PIC\_E\_PIC\_PAS\_INSTALLE   &   ERRMAX + 4\\ \hline
+PIC\_E\_DEV\_DEJA\_PRESENT   &   ERRMAX + 5\\ \hline
+PIC\_E\_DEV\_NON\_PRESENT    &   ERRMAX + 6\\ \hline
 PIC\_E\_PAS\_DE\_MESSAGE	 &	 S\_objLib\_OBJ\_UNAVAILABLE\\ \hline
    \end{tabular}
  \end{center}
 
-\end{m_desc}
+%\end{m_desc}
 
 \vfill
 \pagebreak

@@ -233,9 +233,9 @@ int PIC_TestEnlevement
 )
 {
 	printf( "======\n"
-			"Test d'enlevements de device.\n"
-			" - enlevement normal\n"
-			" - enlevement d'un device inexistant.\n\n");
+			"Test d'retraits de device.\n"
+			" - retrait normal\n"
+			" - retrait d'un device inexistant.\n\n");
 	
 	PIC_DrvInstall();
 	
@@ -243,21 +243,21 @@ int PIC_TestEnlevement
 	
 	if( PIC_DevDelete( "a" ) == 0 )
 	{
-		printf( "Enlevement normal reussi.\n" );
+		printf( "Retrait normal reussi.\n" );
 	}
 	else
 	{
-		printf( "Enlevement normal echoue.\n" );
+		printf( "Retrait normal echoue.\n" );
 		return -1;
 	}
 	
 	if( PIC_DevDelete( "b" ) == -1 )
 	{
-		printf( "Enlevement d'un device inexistant echoue.\n" );
+		printf( "Retrait d'un device inexistant echoue.\n" );
 	}
 	else
 	{
-		printf( "Enlevement d'un device inexistant reussi.\n" );
+		printf( "Retrait d'un device inexistant reussi.\n" );
 		return -1;
 	}
 	

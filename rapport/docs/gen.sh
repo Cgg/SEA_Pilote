@@ -51,9 +51,9 @@ echo "
 \usepackage{geometry}
 \geometry{
 	a4paper,  % 21 x 29,7 cm
-	body={140mm,230mm},
-	left=35mm, 
-	top=30mm,
+	body={160mm,240mm},
+	left=30mm, 
+	top=25mm,
 	headheight=7mm, 
 	headsep=4mm,
 	marginparsep=4mm,
@@ -104,6 +104,7 @@ echo "
 \newcommand\PIXPATH{$PIXPATH}
 \newcommand\SRCPATH{$SRCPATH}
 \renewcommand{\labelitemi}{$\diamond$}
+\renewcommand{\labelenumi}{(\alph{enumi})}
 
 % Redef m_desc
 \newenvironment{m_desc}
