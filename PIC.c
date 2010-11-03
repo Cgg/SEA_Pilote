@@ -40,7 +40,7 @@ static PIC_HEADER * * tabPointeurs = NULL;
 /* prototypes des primitives d'utilisation du PIC */
 
 /******************************************************************************/
-int PIC_Open
+static int PIC_Open
 (
 	PIC_HEADER * desc,
 	char       * remainder,
@@ -48,13 +48,13 @@ int PIC_Open
 );
 
 /******************************************************************************/
-int PIC_Close
+static int PIC_Close
 (
 	PIC_HEADER * desc
 );
 
 /******************************************************************************/
-int PIC_Read
+static int PIC_Read
 (
 	PIC_HEADER * dev,      /* device from which to read */
 	char       * buffer,   /* pointer to buffer to receive bytes */
@@ -62,7 +62,7 @@ int PIC_Read
 );
 
 /******************************************************************************/
-int PIC_IoCtl
+static int PIC_IoCtl
 (
 	PIC_HEADER * desc,
 	int          fonction,
@@ -72,7 +72,7 @@ int PIC_IoCtl
 /* Handler d'interruptions envoyees par la carte des capteurs */
 
 /******************************************************************************/
-int PIC_HandlerIT
+static int PIC_HandlerIT
 (
 	void
 );
@@ -80,13 +80,13 @@ int PIC_HandlerIT
 /* prototype des autres fonctions locales */
 
 /******************************************************************************/
-void PIC_DrvInit
+static void PIC_DrvInit
 (
 	void
 );
 
 /******************************************************************************/
-void PIC_DrvConclude
+static void PIC_DrvConclude
 (
 	void
 );
@@ -285,7 +285,7 @@ int PIC_DevDelete
 }
 
 /******************************************************************************/
-int PIC_Open
+static int PIC_Open
 (
 	PIC_HEADER * desc,
 	char       * remainder,
@@ -305,7 +305,7 @@ int PIC_Open
 }
 
 /******************************************************************************/
-int PIC_Close
+static int PIC_Close
 (
 	PIC_HEADER * desc
 )
@@ -314,7 +314,7 @@ int PIC_Close
 }
 
 /******************************************************************************/
-int PIC_Read
+static int PIC_Read
 (
 	PIC_HEADER * dev,      /* device from which to read */
 	char       * buffer,   /* pointer to buffer to receive bytes */
@@ -332,7 +332,7 @@ int PIC_Read
 }
 
 /******************************************************************************/
-int PIC_IoCtl
+static int PIC_IoCtl
 (
 	PIC_HEADER * desc,
 	int          fonction,
@@ -354,7 +354,7 @@ int PIC_IoCtl
 }
 
 /******************************************************************************/
-int PIC_HandlerIT
+static int PIC_HandlerIT
 (
 	void
 )
@@ -368,7 +368,7 @@ int PIC_HandlerIT
 }
 
 /******************************************************************************/
-void PIC_DrvInit
+static void PIC_DrvInit
 (
 	void
 )
@@ -403,7 +403,7 @@ void PIC_DrvInit
 }
 
 /******************************************************************************/
-void PIC_DrvConclude
+static void PIC_DrvConclude
 (
 	void
 )

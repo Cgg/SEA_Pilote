@@ -23,7 +23,7 @@ static int idTacheSimulation = 0;
 /* === IMPLEMENTATION === */
 
 /******************************************************************************/
-int PIC_DummyCapteur
+static int PIC_DummyCapteur
 ( 
 	char * 		 tabAdressesCapteurs,
 	int    const nbCapteurs
