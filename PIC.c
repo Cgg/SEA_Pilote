@@ -9,7 +9,7 @@
 #include "intLib.h"
 #include "errnoLib.h"
 #include "string.h"
-
+#include "stdioLib.h"
 /* inclusions projet */
 #include "PIC.h"
 #include "PIC_TacheScrutation.h"
@@ -139,7 +139,8 @@ int PIC_DrvRemove
 	{
 		if ( iosDrvRemove( numDriver, TRUE ) == OK )
 		{		
-			numDriver = -1;
+			numDriver     = -1;
+			nombreDevices = 0;
 			
 			PIC_DrvConclude();
 			
@@ -328,12 +329,7 @@ int PIC_Read
 		return -1;
 	}
 
-	if ( msgQReceive( dev->specific.idBAL, buffer, maxbytes, NO_WAIT ) == ERROR );
-	{
-		return -1;
-	}
-
-	return PIC_TAILLE_MSG_TRAITE;
+	return msgQReceive( dev->specific.idBAL, buffer, maxbytes, NO_WAIT );
 }
 
 /******************************************************************************/
@@ -393,18 +389,18 @@ void PIC_DrvInit
 	idBalDrv = msgQCreate( PIC_N_MESSAGES_MAX, PIC_TAILLE_MSG_BRUTE, 
 			MSG_Q_FIFO );
 
+	clockInit.tv_sec  = 0;
+	clockInit.tv_nsec = 0;
+	
+	clock_settime( CLOCK_REALTIME, &clockInit );
+
 	idTacheScrutation = taskSpawn( "PIC_TacheScrutation", 
-			PIC_PRIORITE_SCRUTATION, 0, PIC_STACK_SCRUTATION, 
+			1, 0, 20000, 
 			( FUNCPTR )PIC_TacheScrutation, ( int ) idBalDrv, 
 			( int )tabPointeurs, 0, 0, 0, 0, 0, 0, 0, 0 );
 	
 	intConnect( ( VOIDFUNCPTR * )PIC_VECTEUR_IT, 
 			( VOIDFUNCPTR )PIC_HandlerIT, 0 );
-	
-	clockInit.tv_sec  = 0;
-	clockInit.tv_nsec = 0;
-	
-	clock_settime( CLOCK_REALTIME, &clockInit );
 }
 
 /******************************************************************************/
