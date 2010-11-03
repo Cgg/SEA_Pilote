@@ -9,7 +9,7 @@
 #include "intLib.h"
 #include "errnoLib.h"
 #include "string.h"
-
+#include "stdioLib.h"
 /* inclusions projet */
 #include "PIC.h"
 #include "PIC_TacheScrutation.h"
