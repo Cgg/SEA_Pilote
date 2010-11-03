@@ -13,7 +13,6 @@
 /* inclusions projet */
 #include "PIC.h"
 #include "PIC_TacheScrutation.h"
-#include "PIC_ListeCapteurs.h"
 
 /* === DEFINITIONS DE CONSTANTES === */
 
