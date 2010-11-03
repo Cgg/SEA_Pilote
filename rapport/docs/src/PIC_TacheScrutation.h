@@ -1,6 +1,6 @@
 /* Pilote de capteur :
  * 
- * Description de la tâche de scrutation des messages de capteur.
+ * Description de la tache de scrutation des messages de capteur.
  * 
  * Le role de cette tache est de scruter les messages en provenance des capteurs
  * physiques. Lorsqu'un message arrive, il declenche une interruption. Le 
