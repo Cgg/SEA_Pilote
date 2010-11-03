@@ -393,6 +393,11 @@ void PIC_DrvInit
 	idBalDrv = msgQCreate( PIC_N_MESSAGES_MAX, PIC_TAILLE_MSG_BRUTE, 
 			MSG_Q_FIFO );
 
+	clockInit.tv_sec  = 0;
+	clockInit.tv_nsec = 0;
+	
+	clock_settime( CLOCK_REALTIME, &clockInit );
+
 	idTacheScrutation = taskSpawn( "PIC_TacheScrutation", 
 			PIC_PRIORITE_SCRUTATION, 0, PIC_STACK_SCRUTATION, 
 			( FUNCPTR )PIC_TacheScrutation, ( int ) idBalDrv, 
@@ -400,11 +405,6 @@ void PIC_DrvInit
 	
 	intConnect( ( VOIDFUNCPTR * )PIC_VECTEUR_IT, 
 			( VOIDFUNCPTR )PIC_HandlerIT, 0 );
-	
-	clockInit.tv_sec  = 0;
-	clockInit.tv_nsec = 0;
-	
-	clock_settime( CLOCK_REALTIME, &clockInit );
 }
 
 /******************************************************************************/
