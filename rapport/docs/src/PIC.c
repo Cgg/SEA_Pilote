@@ -120,6 +120,10 @@ int PIC_DrvInstall
 			PIC_DrvInit();
 		}
 	}
+    else
+    {
+        errnoSet( PIC_E_PIC_DEJA_INSTALLE );
+    }
 	
 	return retour;
 }
@@ -143,6 +147,10 @@ int PIC_DrvRemove
 			retour = 0;
 		}
 	}
+    else
+    {
+        errnoSet( PIC_E_PIC_PAS_INSTALLE );
+    }
 	
 	return retour;
 }
@@ -161,6 +169,8 @@ int PIC_DevAdd
 	/* Erreur : driver pas installe */
 	if ( numDriver == -1 )
 	{
+        errnoSet( PIC_E_PIC_PAS_INSTALLE );
+
 		return -1;
 	}
 
@@ -170,6 +180,8 @@ int PIC_DevAdd
 		if ( tabPointeurs[ i ] != NULL && 
 				tabPointeurs[ i ]->specific.adresseCapteur == adresseCapteur )
 		{
+            errnoSet( PIC_E_DEV_DEJA_PRESENT );
+
 			return -1;
 		}
 	}
@@ -265,7 +277,10 @@ int PIC_DevDelete
 		
 		retour = 0;
 	}
-		
+    else
+    {
+        errnoSet( PIC_E_DEV_NON_PRESENT );
+	}
 	return retour;
 }
 
@@ -279,7 +294,9 @@ int PIC_Open
 {
 	if ( *remainder != '\0' )
 	{
-		return ERROR;
+		errnoSet( PIC_E_DEV_NON_PRESENT );
+        
+        return -1;
 	}
 	else
 	{

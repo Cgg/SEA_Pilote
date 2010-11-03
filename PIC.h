@@ -27,9 +27,12 @@
 
 #define PIC_E_TOOMANYDEV			   ( 90 )
 #define PIC_E_PARAM_INCORRECTS         ( 91 )
+#define PIC_E_PIC_DEJA_INSTALLE        ( 92 )
+#define PIC_E_PIC_PAS_INSTALLE         ( 93 )
+#define PIC_E_DEV_DEJA_PRESENT         ( 94 )
+#define PIC_E_DEV_NON_PRESENT          ( 95 )
 
 #define PIC_IOCTL_FONCTION_HOT_SWAP    ( 1 )
-
 
 /* === DECLARATIONS DE TYPES DE DONNEES === */
 
