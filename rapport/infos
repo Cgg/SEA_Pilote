@@ -1,5 +1,5 @@
 # Insert infos here:
-TITLE="Pilote de capteur"
+TITLE="Pilote de capteur pour VxWorks"
 AUTHOR="Clément Geiger et Raphaël Lizé"
 FILE="rapport_driver"
 LANG="francais"
